@@ -1,6 +1,7 @@
 {
-    "images":["jpeg", "jpg", "png", "svg"], 
-    "video":["avi", "mp4", "mov", "mkv"], 
-    "docs":["doc", "docx", "txt", "pdf", "xlsx", "pptx"], 
-    "music":["mp3", "ogg", "wav", "amr"]
+    "images":[".jpeg", ".jpg", ".png", ".svg"], 
+    "video":[".avi", ".mp4", ".mov", ".mkv"], 
+    "documents":[".doc", ".docx", ".txt", ".pdf", ".xlsx", ".pptx"], 
+    "audio":[".mp3", ".ogg", ".wav", ".amr"],
+    "archives":[".zip", ".rar"]
 }

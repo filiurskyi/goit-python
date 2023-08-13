@@ -1,7 +1,8 @@
 import sys
 from pathlib import Path
-import normalize
+from normalize import normalize
 import json
+import shutil
 
 
 def classify(file_name, file='extensions.json'):
@@ -17,27 +18,48 @@ def classify(file_name, file='extensions.json'):
         types = json.loads(f.read())
     for type, extensions in types.items():
         for extension in extensions:
-            if str(file_name).endswith(extension):
+            if file_name.suffix in extensions:
                 return type
     return None
 
 
 def parse_folder(path):
-    '''Parsing folder index recursively
+    '''Parsing folder index recursively and making major decisions
 
     path -- str name of folder
     '''
-    for item in path.iterdir():
-        if item.is_dir():
-            print("Folder found:".ljust(15), item)
-            parse_folder(item)
-        else:
-            print("File found:".ljust(15),  item)
-            print("Classified as:".ljust(15), classify(item))
+
+    ljust = 15
+    infotext = ">>> Starting to sort folder:"
+    print(infotext, path)
+    for file_path in path.iterdir():
+        if file_path.is_dir():
+            print("> Found folder:".ljust(ljust), file_path)
+            if file_path in ["archives", "video", "audio", "documents", "images"]:
+                continue
+            else:
+                print(infotext, path)
+                parse_folder(file_path)
+        else:  # from here all file operations
+            print("File found:".ljust(ljust),  file_path)
+            print("Classified as:".ljust(ljust), classify(file_path))
+
+            file_type = classify(file_path)
+            normalized_name = normalize(file_path)
+
+            print(f"Classified as: ".ljust(ljust), file_type)
+            print(f"Normalized name is".ljust(ljust), normalized_name)
+
+            if file_type:  # handler for known types
+                shutil.move(file_path, f"{file_type}/{normalized_name}")
+                pass
+            else:
+                pass
 
 
+# main loop
 if __name__ == '__main__':
     for p in sys.argv[1:]:
         path = Path(p)
-        print("Starting to sort folder:", path)
         parse_folder(path)
+        print(p)
