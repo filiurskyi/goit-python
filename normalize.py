@@ -23,7 +23,7 @@ def normalize(name):
     assume that extension is str after last "."
     '''
     # extract file extension as ext and file name es fname
-    fname = list(name.name)
+    fname = list(name.stem)
     ext = name.suffix
 
     # iterate through every char in file name and replace unknown chars with "_"

@@ -23,7 +23,7 @@ def classify(file_name, file='extensions.json'):
     return None
 
 
-def parse_folder(path):
+def parse_folder(path, root_path, verbose=0):
     '''Parsing folder index recursively and making major decisions
 
     path -- str name of folder
@@ -31,35 +31,57 @@ def parse_folder(path):
 
     ljust = 15
     infotext = ">>> Starting to sort folder:"
-    print(infotext, path)
+    if verbose:
+        print(infotext, path)
+    counter = 0
     for file_path in path.iterdir():
+        counter += 1
         if file_path.is_dir():
-            print("> Found folder:".ljust(ljust), file_path)
+            if verbose:
+                print("> Found folder:".ljust(ljust), file_path)
             if file_path in ["archives", "video", "audio", "documents", "images"]:
                 continue
             else:
-                print(infotext, path)
-                parse_folder(file_path)
+                if verbose:
+                    print(infotext, path)
+                parse_folder(file_path, root_path, verbose)
         else:  # from here all file operations
-            print("File found:".ljust(ljust),  file_path)
-            print("Classified as:".ljust(ljust), classify(file_path))
-
             file_type = classify(file_path)
             normalized_name = normalize(file_path)
 
-            print(f"Classified as: ".ljust(ljust), file_type)
-            print(f"Normalized name is".ljust(ljust), normalized_name)
+            if verbose:
+                print("File found:".ljust(ljust),  file_path)
+                print("Classified as:".ljust(ljust), classify(file_path))
+                print("Classified as: ".ljust(ljust), file_type)
+                print("Normalized name is".ljust(ljust), normalized_name)
 
             if file_type:  # handler for known types
-                shutil.move(file_path, f"{file_type}/{normalized_name}")
-                pass
+                destination_folder = Path(root_path / file_type)
+                destination_folder.mkdir(parents=True, exist_ok=True)
+
+                # print(f"want to move file".ljust(ljust), file_path,
+                #       f" to {file_type}\{normalized_name}")
+                try:
+                    file_path.resolve().rename(
+                        f"{root_path}\{file_type}\{normalized_name}")
+                    print(f"file move ok : ".ljust(ljust),
+                          f"{root_path}\{file_type}\{normalized_name}")
+
+                except OSError:
+                    file_path.resolve().rename(
+                        f"{root_path}\{file_type}\{counter}_{normalized_name}")
+                    print(f"file move ok (d) : ".ljust(ljust),
+                          f"{root_path}\{file_type}\{counter}_{normalized_name}")
+
+                except:
+                    print(f"file move failed : ".ljust(ljust),
+                          f"{file_type}\{normalized_name}")
             else:
-                pass
+                print(f"not moving anything".rjust(ljust))
 
 
 # main loop
 if __name__ == '__main__':
     for p in sys.argv[1:]:
         path = Path(p)
-        parse_folder(path)
-        print(p)
+        parse_folder(path, path, verbose=0)
