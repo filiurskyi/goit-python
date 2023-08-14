@@ -18,14 +18,13 @@ def translate(name):
     return name.translate(TRANS)
 
 
-def normalize(input):
+def normalize(name):
     '''input is str'''
-    name, ext = input
     fname = list(name)
 
     # iterate through every char in file name and replace unknown chars with "_"
     for char in fname:
         if not char.isalpha():
             fname[fname.index(char)] = "_"
-    normalized_name = translate("".join(fname)) + ext
+    normalized_name = translate("".join(fname))
     return normalized_name
