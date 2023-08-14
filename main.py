@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 from normalize import normalize
 import json
+import shutil
 
 
 def classify(file_name, file="extensions.json"):
@@ -37,27 +38,33 @@ def filename_to_str(filename):
     return (str(filename.stem), str(filename.suffix))
 
 
-def rename_files(path, root_path):
+def rename_files(path):
     '''rename files and folders'''
     name = filename_to_str(path)[0]
     ext = filename_to_str(path)[1]
     normalized_name = normalize(name)
-    counter = 1
-    new_path = root_path / f"{normalized_name}{ext}"
+    counter = 0
+    new_path = path.parent / f"{normalized_name}{ext}"
     try:
         path.resolve().rename(new_path)
+        return new_path
     except OSError:
         while new_path.exists():
             char = counter * "_"
-            new_path = root_path / f"{normalized_name}_{char}{ext}"
+            new_path = path.parent / f"{normalized_name}_{char}{ext}"
             counter += 1
         path.resolve().rename(new_path)
+        return new_path
     except:
-        print("error while renaming")
+        print("error while renaming", new_path)
 
 
 def filetypes():
     return ["archives", "video", "audio", "documents", "images"]
+
+
+def unpack(archive_path, extract_to):
+    shutil.unpack_archive(archive_path, extract_to)
 
 
 def process_iffolder(path, root_path):
@@ -71,21 +78,34 @@ def process_iffolder(path, root_path):
 
 def process_iffile(path, root_path):
     filetype = classify(path)
-    print(f"Found following file: {path} with filetype {filetype}")
-    move(path, root_path, filetype)
+    if filetype == "archives":
+        print("found filetype", filetype, path)
+        unpack_target = root_path / "archives" / path.stem
+        unpack(path, unpack_target)
+    else:
+        move(path, root_path, filetype)
 
 
 def move(path, root_path, filetype):
     if filetype:  # handler for known types
         destination_folder = Path(root_path / filetype)
         destination_folder.mkdir(parents=True, exist_ok=True)
+        new_path = root_path / f"{filetype}\{path.name}"
+        counter = 1
         try:
-            path.resolve().rename(
-                f"{root_path}\{filetype}\{path.name}")
+            path.resolve().rename(new_path)
+        except FileExistsError:
+            while new_path.exists():
+                char = counter * "_"
+                new_path = root_path / \
+                    f"{filetype}\{path.stem}{char}{path.suffix}"
+                counter += 1
+            path.resolve().rename(new_path)
         except:
-            print(f"file move failed : {filetype}")
-    else:
-        print(f"Error, not moving {path}")
+            print(f"file move failed : {path.name}")
+    else:  # unknown files will not be moved
+        # print(f"Error, not moving {path}")
+        pass
 
 
 def parse_main(path, root_path):
@@ -93,13 +113,12 @@ def parse_main(path, root_path):
     path -- str name of folder
     '''
     try:
-        path.iterdir()
         for file_path in path.iterdir():
-            rename_files(file_path, root_path)
-            if file_path.is_dir():
-                process_iffolder(file_path, root_path)
+            filename_normalized = rename_files(file_path)
+            if filename_normalized.is_dir():
+                process_iffolder(filename_normalized, root_path)
             else:  # from here all file operations
-                process_iffile(file_path, root_path)
+                process_iffile(filename_normalized, root_path)
     except FileNotFoundError:
         print("Folder not found")
 
