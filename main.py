@@ -62,7 +62,7 @@ def filetypes():
 
 def process_iffolder(path, root_path):
     is_empty = not any(path.iterdir())
-    if not path in filetypes():
+    if not path.stem in filetypes():
         if is_empty:
             path.rmdir()
         else:
@@ -71,51 +71,37 @@ def process_iffolder(path, root_path):
 
 def process_iffile(path, root_path):
     filetype = classify(path)
-
-    # MOVE
-    # try:
-    #     path.resolve().rename(f"{root_path}\{filetype}\{normalized_name}")
-    #     print(f"file move ok : ".ljust(ljust), f"{root_path}\{filetype}\{normalized_name}")
+    print(f"Found following file: {path} with filetype {filetype}")
+    move(path, root_path, filetype)
 
 
-def parse_main(path, root_path, verbose=0):
+def move(path, root_path, filetype):
+    if filetype:  # handler for known types
+        destination_folder = Path(root_path / filetype)
+        destination_folder.mkdir(parents=True, exist_ok=True)
+        try:
+            path.resolve().rename(
+                f"{root_path}\{filetype}\{path.name}")
+        except:
+            print(f"file move failed : {filetype}")
+    else:
+        print(f"Error, not moving {path}")
+
+
+def parse_main(path, root_path):
     '''Parsing folder index recursively and making major decisions
-
     path -- str name of folder
     '''
-    for file_path in path.iterdir():
-        rename_files(file_path, root_path)
-        if file_path.is_dir():
-            process_iffolder(file_path, root_path)
-        else:  # from here all file operations
-            process_iffile(file_path, root_path)
-
-        #     file_type = classify(file_path)
-        #     normalized_name = normalize(filename_to_str(file_path))
-
-        #     if file_type:  # handler for known types
-        #         destination_folder = Path(root_path / file_type)
-        #         destination_folder.mkdir(parents=True, exist_ok=True)
-
-            # try:
-            #     file_path.resolve().rename(
-            #         f"{root_path}\{file_type}\{normalized_name}")
-            #     print(f"file move ok : ".ljust(ljust),
-            #           f"{root_path}\{file_type}\{normalized_name}")
-
-        #         except OSError:
-        #             file_path.resolve().rename(
-        #                 f"{root_path}\{file_type}\{counter}_{normalized_name}")
-        #             if verbose:
-        #                 print(f"file move ok (d) : ".ljust(ljust),
-        #                       f"{root_path}\{file_type}\{counter}_{normalized_name}")
-
-        #         except:
-        #             if verbose:
-        #                 print(f"file move failed : ".ljust(ljust),
-        #                       f"{file_type}\{normalized_name}")
-        #     else:
-        #         print(f"not moving anything".rjust(ljust))
+    try:
+        path.iterdir()
+        for file_path in path.iterdir():
+            rename_files(file_path, root_path)
+            if file_path.is_dir():
+                process_iffolder(file_path, root_path)
+            else:  # from here all file operations
+                process_iffile(file_path, root_path)
+    except FileNotFoundError:
+        print("Folder not found")
 
 
 # main loop
@@ -123,5 +109,5 @@ if __name__ == '__main__':
     for p in sys.argv[1:]:
         unknown_extensions = []
         path = Path(p)
-        parse_main(path, path, verbose=0)
+        parse_main(path, path)
         print(f"Unknown extensions are:", " ".join(unknown_extensions))
