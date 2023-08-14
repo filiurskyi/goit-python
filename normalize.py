@@ -18,13 +18,10 @@ def translate(name):
     return name.translate(TRANS)
 
 
-def normalize(name):
-    '''input is WindowPath obj
-    assume that extension is str after last "."
-    '''
-    # extract file extension as ext and file name es fname
-    fname = list(name.stem)
-    ext = name.suffix
+def normalize(input):
+    '''input is str'''
+    name, ext = input
+    fname = list(name)
 
     # iterate through every char in file name and replace unknown chars with "_"
     for char in fname:

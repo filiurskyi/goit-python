@@ -2,7 +2,6 @@ import sys
 from pathlib import Path
 from normalize import normalize
 import json
-import shutil
 
 
 def classify(file_name, file='extensions.json'):
@@ -21,6 +20,22 @@ def classify(file_name, file='extensions.json'):
             if file_name.suffix in extensions:
                 return type
     return None
+
+
+def log_unknown_ext():
+    '''log unknown extensions'''
+    pass
+
+
+def filename_to_str(filename):
+    '''convert and split path obj to string tuple'''
+    return (str(filename.stem), str(filename.suffix))
+
+
+def rename_files():
+    '''rename files and folders'''
+
+    pass
 
 
 def parse_folder(path, root_path, verbose=0):
@@ -47,7 +62,7 @@ def parse_folder(path, root_path, verbose=0):
                 parse_folder(file_path, root_path, verbose)
         else:  # from here all file operations
             file_type = classify(file_path)
-            normalized_name = normalize(file_path)
+            normalized_name = normalize(filename_to_str(file_path))
 
             if verbose:
                 print("File found:".ljust(ljust),  file_path)
@@ -59,8 +74,6 @@ def parse_folder(path, root_path, verbose=0):
                 destination_folder = Path(root_path / file_type)
                 destination_folder.mkdir(parents=True, exist_ok=True)
 
-                # print(f"want to move file".ljust(ljust), file_path,
-                #       f" to {file_type}\{normalized_name}")
                 try:
                     file_path.resolve().rename(
                         f"{root_path}\{file_type}\{normalized_name}")
@@ -70,12 +83,14 @@ def parse_folder(path, root_path, verbose=0):
                 except OSError:
                     file_path.resolve().rename(
                         f"{root_path}\{file_type}\{counter}_{normalized_name}")
-                    print(f"file move ok (d) : ".ljust(ljust),
-                          f"{root_path}\{file_type}\{counter}_{normalized_name}")
+                    if verbose:
+                        print(f"file move ok (d) : ".ljust(ljust),
+                              f"{root_path}\{file_type}\{counter}_{normalized_name}")
 
                 except:
-                    print(f"file move failed : ".ljust(ljust),
-                          f"{file_type}\{normalized_name}")
+                    if verbose:
+                        print(f"file move failed : ".ljust(ljust),
+                              f"{file_type}\{normalized_name}")
             else:
                 print(f"not moving anything".rjust(ljust))
 
