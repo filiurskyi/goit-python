@@ -42,6 +42,8 @@ def rename_files(path):
     '''rename files and folders'''
     name = filename_to_str(path)[0]
     ext = filename_to_str(path)[1]
+    if not classify(path):
+        return path
     normalized_name = normalize(name)
     counter = 0
     new_path = path.parent / f"{normalized_name}{ext}"
