@@ -8,5 +8,5 @@ setup(
     author='Andrii',
     author_email='andrii@example.com',
     license='MIT',
-    packages=[sys, pathlib, normalize, json, shutil]
+    packages=find_namespace_packages()
 )
