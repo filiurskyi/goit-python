@@ -126,11 +126,11 @@ def parse_main(path, root_path):
 
 def main_prog():
     for p in sys.argv[1:]:
-        unknown_extensions = []
         path = Path(p)
         parse_main(path, path)
         print(f"Unknown extensions are:", " ".join(unknown_extensions))
 
 # main loop
 if __name__ == '__main__':
+    unknown_extensions = []
     main_prog()
