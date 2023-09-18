@@ -124,11 +124,13 @@ def parse_main(path, root_path):
     except FileNotFoundError:
         print("Folder not found")
 
-
-# main loop
-if __name__ == '__main__':
+def main_prog():
     for p in sys.argv[1:]:
         unknown_extensions = []
         path = Path(p)
         parse_main(path, path)
         print(f"Unknown extensions are:", " ".join(unknown_extensions))
+
+# main loop
+if __name__ == '__main__':
+    main_prog()
