@@ -1,6 +1,8 @@
 from datetime import datetime
 
-# days = ["Monday", "Tuesday", "Wednesday", "Thutsday", "Friday", "Saturday", "Sunday"]
+workdays = ["Monday", "Tuesday", "Wednesday", "Thutsday", "Friday"]
+weekend = ["Saturday", "Sunday"]
+
 
 def get_birthdays_per_week(users: list) -> dict:
     '''receives list of dictionaries:
@@ -13,20 +15,27 @@ def get_birthdays_per_week(users: list) -> dict:
     wednesday = []
     thursday = []
     friday = []
-    # saturday = []
-    # sunday = []
+    result = []
+    
+    for workday in workdays:
 
-    for user in users:
-        print(user)
-        name = user["name"]
-        birthday = user["birthday"]
+        for user in users:
 
-        # if birthday.date
+            name = user["name"]
+            birthday = user["birthday"].strftime("%A %d %B").split()
+            print(name)
+            print(birthday)
 
-    result = {"Monday":monday, "Tuesday":tuesday, "Wednesday":wednesday, "Thursday":thursday, "Friday":friday}
+            # missed BD on weekend
+            if birthday[0] in weekend:
+                pass
+
+    # result = {"Monday": monday, "Tuesday": tuesday,
+    #           "Wednesday": wednesday, "Thursday": thursday, "Friday": friday}
     return result
 
 
 # main loop
 if __name__ == '__main__':
-    print(get_birthdays_per_week([{"name": "Bill Gates", "birthday": datetime(1955, 10, 28).date()}]))
+    print(get_birthdays_per_week(
+        [{"name": "Bill Gates", "birthday": datetime(1955, 10, 28).date()}]))
