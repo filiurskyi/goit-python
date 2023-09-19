@@ -8,5 +8,6 @@ setup(
     author='Andrii',
     author_email='andrii@example.com',
     license='MIT',
-    packages=find_namespace_packages()
+    packages=find_namespace_packages(),
+    entry_points={'console_scripts': ['clean_folder = clean_folder.main_prog']}
 )
