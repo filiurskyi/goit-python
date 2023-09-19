@@ -1,41 +1,58 @@
-from datetime import datetime
-
-workdays = ["Monday", "Tuesday", "Wednesday", "Thutsday", "Friday"]
-weekend = ["Saturday", "Sunday"]
+from datetime import date, datetime, timedelta
 
 
-def get_birthdays_per_week(users: list) -> dict:
-    '''receives list of dictionaries:
-    [{"name": "Bill Gates", "birthday": datetime(1955, 10, 28).date()}]
-    returns:
-    {'Monday': ['Bill', 'Jan'], 'Wednesday': ['Kim']}
-    '''
-    monday = []
-    tuesday = []
-    wednesday = []
-    thursday = []
-    friday = []
-    result = []
-    
-    for workday in workdays:
+def get_birthdays_per_week(users):
+    result = {}
+    current_date = date.today()
+    one_day = timedelta(days=1)
+    two_days = timedelta(days=2)
+    five_days = timedelta(days=5)
+    next_monday_date = current_date
+    while next_monday_date.strftime("%A") != "Monday":
+        next_monday_date += one_day
+    for user in users:
+        birthday = user["birthday"]
+        name = user["name"]
 
-        for user in users:
+        year_delta = timedelta(days=365.25)
+        if birthday < current_date:
+            while birthday.strftime("%Y") != str(current_date.year):
+                birthday += year_delta
+        else:
+            while birthday.strftime("%Y") != str(current_date.year):
+                birthday -= year_delta
 
-            name = user["name"]
-            birthday = user["birthday"].strftime("%A %d %B").split()
-            print(name)
-            print(birthday)
+        day_name = str(birthday.strftime("%A")).strip()
 
-            # missed BD on weekend
-            if birthday[0] in weekend:
-                pass
+        previous = next_monday_date - two_days
+        following = next_monday_date + five_days
 
-    # result = {"Monday": monday, "Tuesday": tuesday,
-    #           "Wednesday": wednesday, "Thursday": thursday, "Friday": friday}
+        print(f"{previous} < {birthday} < {following}")
+
+        if previous < birthday < following:
+            if day_name == "Saturday" or day_name == "Sunday":
+                if result.get("Monday", None):
+                    result["Monday"].append(name)
+                else:
+                    result.update({"Monday": name})
+            else:
+                if result.get(day_name, None):
+                    result[day_name].append(name)
+                else:
+                    result.update({day_name: name})
+        else:
+            continue
+    print(f"FINAL RES IS {result}")
     return result
 
 
-# main loop
-if __name__ == '__main__':
-    print(get_birthdays_per_week(
-        [{"name": "Bill Gates", "birthday": datetime(1955, 10, 28).date()}]))
+if __name__ == "__main__":
+    users = [
+        {"name": "Jan Koum", "birthday": datetime(1976, 1, 1).date()},
+    ]
+
+    result = get_birthdays_per_week(users)
+    print(result)
+    # Виводимо результат
+    for day_name, names in result.items():
+        print(f"{day_name}: {', '.join(names)}")
