@@ -1,49 +1,34 @@
 from datetime import date, datetime, timedelta
+from collections import defaultdict
 
 
 def get_birthdays_per_week(users):
-    result = {}
-    current_date = date.today()
-    one_day = timedelta(days=1)
-    two_days = timedelta(days=2)
-    five_days = timedelta(days=5)
-    next_monday_date = current_date
-    while next_monday_date.strftime("%A") != "Monday":
-        next_monday_date += one_day
+    today_date = date.today()
+    current_year = today_date.year
+    users_list = defaultdict(list)
+
+    if not users:
+        return {}
+
     for user in users:
-        birthday = user["birthday"]
-        name = user["name"]
-
-        year_delta = timedelta(days=365.25)
-        if birthday < current_date:
-            while birthday.strftime("%Y") != str(current_date.year):
-                birthday += year_delta
+        name = user['name']
+        birthday = user['birthday']
+        birthday_this_year = birthday.replace(year=current_year)
+        if birthday.month == 1:
+            birthday_this_year = birthday.replace(year=current_year + 1)
         else:
-            while birthday.strftime("%Y") != str(current_date.year):
-                birthday -= year_delta
-
-        day_name = str(birthday.strftime("%A")).strip()
-
-        previous = next_monday_date - two_days
-        following = next_monday_date + five_days
-
-        print(f"{previous} < {birthday} < {following}")
-
-        if previous < birthday < following:
-            if day_name == "Saturday" or day_name == "Sunday":
-                if result.get("Monday", None):
-                    result["Monday"].append(name)
-                else:
-                    result.update({"Monday": name})
-            else:
-                if result.get(day_name, None):
-                    result[day_name].append(name)
-                else:
-                    result.update({day_name: name})
-        else:
+            birthday_this_year = birthday.replace(year=current_year)
+        if birthday_this_year < today_date:
             continue
-    print(f"FINAL RES IS {result}")
-    return result
+
+        if birthday_this_year.weekday() >= 5:
+            birthday_this_year += timedelta(days=(7 -
+                                            birthday_this_year.weekday()))
+
+        day_name = birthday_this_year.strftime('%A')
+        users_list[day_name].append(name)
+
+    return users_list
 
 
 if __name__ == "__main__":
