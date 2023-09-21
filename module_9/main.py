@@ -7,7 +7,7 @@ def input_error(func):
         except KeyError:
             result = "Wrong input!"
         except ValueError:
-            result = "missing contact information"
+            result = "Missing contact information"
         except IndexError:
             result = "catch IndexError"
         except TypeError:
@@ -76,9 +76,12 @@ def main():
         try:
             command, *args = user_input.split()
             out = COMMANDS_ARG[command.lower()](args)
-        except:
+        except KeyError:
             command = user_input
-            out = COMMANDS_NO_ARG[command.lower()]()
+            if command not in COMMANDS_NO_ARG:
+                out = "Unknown command"
+            else:
+                out = COMMANDS_NO_ARG[command.lower()]()
 
         print(out)
 
