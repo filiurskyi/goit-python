@@ -34,7 +34,7 @@ class Record:
         for p in self.phones:
             if phone == p.value:
                 print(f"match found {phone} == {p.value}")
-                return p.value
+                return p
         return
 
     def add_phone(self, phone):
@@ -48,7 +48,7 @@ class Record:
                 print(f"before removing : {self.phones}")
                 self.phones.remove(p)
                 print(f"after removing : {self.phones}")
-                return p.value
+                return self
         raise ValueError
 
     def edit_phone(self, old_phone, new_phone):
@@ -56,7 +56,7 @@ class Record:
             if p.value == old_phone:
                 self.remove_phone(old_phone)
                 self.add_phone(new_phone)
-                return
+                return self
         raise ValueError
 
 
