@@ -1,4 +1,5 @@
 from collections import UserDict
+from datetime import datetime, date, timedelta
 
 
 class Field:
@@ -13,6 +14,24 @@ class Name(Field):
     pass
 
 
+class Birthday(Field):
+    def __init__(self, birthday):
+        if birthday is None:
+            self.birthday = birthday
+        else:
+            birthday = ''.join(filter(str.isdigit, birthday))
+            if len(birthday) == 6:
+                dt_bd = datetime.strptime(birthday, "%d%m%y")
+                self.birthday = dt_bd
+            elif len(birthday) == 8:
+                dt_bd = datetime.strptime(birthday, "%d%m%Y")
+                self.birthday = dt_bd
+            else:
+                raise ValueError(
+                    "Date should be in format dd/mm/yy or dd/mm/yyyy")
+            print(f"BIRTHDAY DT IS : {dt_bd.date()}")
+
+
 class Phone(Field):
     def __init__(self, value):
         value = ''.join(filter(str.isdigit, value))
@@ -23,9 +42,10 @@ class Phone(Field):
 
 
 class Record:
-    def __init__(self, name):
+    def __init__(self, name, birthday=None):
         self.name = Name(name)
         self.phones = []
+        self.birthday = Birthday(birthday)
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
@@ -33,21 +53,16 @@ class Record:
     def find_phone(self, phone):
         for p in self.phones:
             if phone == p.value:
-                print(f"match found {phone} == {p.value}")
                 return p
         return
 
     def add_phone(self, phone):
-        print(f"before adding : {self.phones}")
         self.phones.append(Phone(phone))
-        print(f"after adding : {self.phones}")
 
     def remove_phone(self, phone):
         for p in self.phones:
             if p.value == phone:
-                print(f"before removing : {self.phones}")
                 self.phones.remove(p)
-                print(f"after removing : {self.phones}")
                 return self
         raise ValueError
 
@@ -58,6 +73,18 @@ class Record:
                 self.add_phone(new_phone)
                 return self
         raise ValueError
+
+    def days_to_birthday(self):
+        today_date = datetime.now()
+        current_year = today_date.year
+        birthday = self.birthday.birthday
+        next_birthday = birthday.replace(year=current_year)
+
+        if next_birthday < today_date:
+            next_birthday = birthday.replace(year=current_year+1)
+        days_to_bd = next_birthday - today_date
+
+        return days_to_bd.days
 
 
 class AddressBook(UserDict):
@@ -77,13 +104,19 @@ class AddressBook(UserDict):
             del self.data[record]
         else:
             return
+        
+    def iterator(self, n=5):
+
+        generator = None
+        return generator
+
 
 if __name__ == "__main__":
     # Створення нової адресної книги
     book = AddressBook()
 
     # Створення запису для John
-    john_record = Record("John")
+    john_record = Record("John", input("Enter bd: "))
     john_record.add_phone("1234567890")
     john_record.add_phone("5555555555")
 
@@ -97,7 +130,8 @@ if __name__ == "__main__":
 
     # Виведення всіх записів у книзі
     for name, record in book.data.items():
-        print(record)
+        # print(record)
+        pass
 
     # Знаходження та редагування телефону для John
     john = book.find("John")
@@ -111,3 +145,6 @@ if __name__ == "__main__":
 
     # Видалення запису Jane
     book.delete("Jane")
+
+    # print days_to_bd
+    print("Days to bd: ", john_record.days_to_birthday())
