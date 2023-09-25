@@ -4,7 +4,16 @@ from datetime import datetime, date, timedelta
 
 class Field:
     def __init__(self, value):
+        self.__value = value
         self.value = value
+
+    @property
+    def value(self):
+        return self.__value
+
+    @value.setter
+    def value(self, value):
+        self.__value = value
 
     def __str__(self):
         return str(self.value)
@@ -74,6 +83,8 @@ class Record:
         raise ValueError
 
     def days_to_birthday(self):
+        if self.birthday.birthday is None:
+            return None
         today_date = datetime.now()
         current_year = today_date.year
         birthday = self.birthday.birthday
@@ -104,20 +115,21 @@ class AddressBook(UserDict):
         else:
             return
 
-    def iterator(self, n=3):
+    def iterator(self, n=5):
         counter = 0
         output = {}
         for key, value in self.data.items():
-            if counter % n or counter == 0:
-                counter += 1
+            counter += 1
+            # print(key)
+            # print(f"IF {counter} == {len(self.data)}")
+            if counter % n or counter == 0 or counter == len(self.data):
                 output.update({key: value})
                 if counter == len(self.data):
                     yield output
             else:
+                output.update({key: value})
                 yield output
                 output = {}
-                counter += 1
-                output.update({key: value})
 
 
 if __name__ == "__main__":
@@ -129,6 +141,7 @@ if __name__ == "__main__":
     john_record.add_phone("1234567890")
     john_record.add_phone("5555555555")
 
+    # creating big list
     for someone in range(1, 14):
         book.add_record(
             Record(f"Name num{someone}", f"{someone + 10}/09/2023"))
@@ -139,12 +152,13 @@ if __name__ == "__main__":
     # Створення та додавання нового запису для Jane
     jane_record = Record("Jane")
     jane_record.add_phone("9876543210")
+    print(jane_record.days_to_birthday())
     book.add_record(jane_record)
 
     # Виведення всіх записів у книзі
-    # for name, record in book.data.items():
-    #     print(record)
-    #     pass
+    for name, record in book.data.items():
+        print(record)
+        pass
 
     # Знаходження та редагування телефону для John
     john = book.find("John")
@@ -159,10 +173,7 @@ if __name__ == "__main__":
     # Видалення запису Jane
     book.delete("Jane")
 
-    # print days_to_bd
-    # print("Days to bd: ", john_record.days_to_birthday())
-    print(book)
-    while True:
-        for i in book.iterator():
-            print(i)
-            input()
+    # Тест пагінації
+    for i in book.iterator():
+        print(i)
+        input()
