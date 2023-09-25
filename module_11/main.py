@@ -103,21 +103,21 @@ class AddressBook(UserDict):
             del self.data[record]
         else:
             return
-        
+
     def iterator(self, n=3):
         counter = 0
         output = {}
         for key, value in self.data.items():
-            if counter != n:
+            if counter % n or counter == 0:
                 counter += 1
                 output.update({key: value})
+                if counter == len(self.data):
+                    yield output
             else:
                 yield output
-                counter = 0
                 output = {}
                 counter += 1
                 output.update({key: value})
-
 
 
 if __name__ == "__main__":
@@ -129,8 +129,9 @@ if __name__ == "__main__":
     john_record.add_phone("1234567890")
     john_record.add_phone("5555555555")
 
-    for someone in range(1, 20):
-        book.add_record(Record(f"Name num{someone}", f"{someone + 10}/09/2023"))
+    for someone in range(1, 14):
+        book.add_record(
+            Record(f"Name num{someone}", f"{someone + 10}/09/2023"))
 
     # Додавання запису John до адресної книги
     book.add_record(john_record)
@@ -160,7 +161,7 @@ if __name__ == "__main__":
 
     # print days_to_bd
     # print("Days to bd: ", john_record.days_to_birthday())
-
+    print(book)
     while True:
         for i in book.iterator():
             print(i)
