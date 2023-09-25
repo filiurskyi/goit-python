@@ -29,7 +29,6 @@ class Birthday(Field):
             else:
                 raise ValueError(
                     "Date should be in format dd/mm/yy or dd/mm/yyyy")
-            print(f"BIRTHDAY DT IS : {dt_bd.date()}")
 
 
 class Phone(Field):
@@ -105,10 +104,20 @@ class AddressBook(UserDict):
         else:
             return
         
-    def iterator(self, n=5):
+    def iterator(self, n=3):
+        counter = 0
+        output = {}
+        for key, value in self.data.items():
+            if counter != n:
+                counter += 1
+                output.update({key: value})
+            else:
+                yield output
+                counter = 0
+                output = {}
+                counter += 1
+                output.update({key: value})
 
-        generator = None
-        return generator
 
 
 if __name__ == "__main__":
@@ -116,9 +125,12 @@ if __name__ == "__main__":
     book = AddressBook()
 
     # Створення запису для John
-    john_record = Record("John", input("Enter bd: "))
+    john_record = Record("John", "26/09/2023")
     john_record.add_phone("1234567890")
     john_record.add_phone("5555555555")
+
+    for someone in range(1, 20):
+        book.add_record(Record(f"Name num{someone}", f"{someone + 10}/09/2023"))
 
     # Додавання запису John до адресної книги
     book.add_record(john_record)
@@ -129,22 +141,27 @@ if __name__ == "__main__":
     book.add_record(jane_record)
 
     # Виведення всіх записів у книзі
-    for name, record in book.data.items():
-        # print(record)
-        pass
+    # for name, record in book.data.items():
+    #     print(record)
+    #     pass
 
     # Знаходження та редагування телефону для John
     john = book.find("John")
     john.edit_phone("1234567890", "1112223333")
 
-    print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
+    # print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
 
     # Пошук конкретного телефону у записі John
     found_phone = john.find_phone("5555555555")
-    print(f"{john.name}: {found_phone}")  # Виведення: 5555555555
+    # print(f"{john.name}: {found_phone}")  # Виведення: 5555555555
 
     # Видалення запису Jane
     book.delete("Jane")
 
     # print days_to_bd
-    print("Days to bd: ", john_record.days_to_birthday())
+    # print("Days to bd: ", john_record.days_to_birthday())
+
+    while True:
+        for i in book.iterator():
+            print(i)
+            input()
