@@ -1,7 +1,12 @@
 from collections import UserDict
 from datetime import datetime
 from random import randint
+import os
 import pickle
+
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'adressbook.bin')
 
 
 class Field:
@@ -115,7 +120,7 @@ class AddressBook(UserDict):
 
     def __init__(self):
         try:
-            with open("adressbook.bin", "rb") as f:
+            with open(filename, "rb") as f:
                 fr = f.read()
                 if fr:
                     data = pickle.loads(fr)
@@ -134,7 +139,7 @@ class AddressBook(UserDict):
 
     def add_record(self, record):
         self.data.update({record.name.value: record})
-        with open("adressbook.bin", "wb") as f:
+        with open(filename, "wb") as f:
             pickle.dump(self.data, f)
         return f"Sucsessfully added record:\n{record}"
 
@@ -186,17 +191,17 @@ if __name__ == "__main__":
     # john = book.find("John")
     # john.edit_phone("1234567890", "1112223333")
 
-    # for someone in range(1, 14):
+    for someone in range(1, 14):
 
-    #     if randint(1111111111, 9999999999) % 2:
-    #         rand_user = Record(
-    #             f"Name nr. {someone}", f"{someone + 10}/09/2023")
-    #     else:
-    #         rand_user = Record(f"Name nr. {someone}")
-    #         rand_user.add_phone(str(randint(1111111111, 9999999999)))
-    #     rand_user.add_phone(str(randint(1111111111, 9999999999)))
+        if randint(1111111111, 9999999999) % 2:
+            rand_user = Record(
+                f"Name nr. {someone}", f"{someone + 10}/09/2023")
+        else:
+            rand_user = Record(f"Name nr. {someone}")
+            rand_user.add_phone(str(randint(1111111111, 9999999999)))
+        rand_user.add_phone(str(randint(1111111111, 9999999999)))
 
-    #     book.add_record(rand_user)
+        book.add_record(rand_user)
 
     # jane_record = Record("Jane")
     # jane_record.add_phone("9876543210")
