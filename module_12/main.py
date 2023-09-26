@@ -41,6 +41,12 @@ class Birthday(Field):
                 raise ValueError(
                     "Date should be in format dd/mm/yy or dd/mm/yyyy")
 
+    def __str__(self):
+        if self.birthday is None:
+            return "\"\""
+        else:
+            return str(self.birthday.date())
+
 
 class Phone(Field):
     def __init__(self, value):
@@ -64,7 +70,7 @@ class Record:
         self.birthday = Birthday(birthday)
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+        return f"Contact name: {self.name.value}, birthday: {self.birthday}, phones: {'; '.join(p.value for p in self.phones)}"
 
     def find_phone(self, phone):
         for p in self.phones:
@@ -118,6 +124,13 @@ class AddressBook(UserDict):
                     self.data = {}
         except FileNotFoundError:
             self.data = {}
+
+    def __repr__(self) -> str:
+        out = ""
+        for name in self:
+            d = self.data.get(name, None)
+            out += f"{d}\n"
+        return out
 
     def add_record(self, record):
         self.data.update({record.name.value: record})
@@ -174,10 +187,14 @@ if __name__ == "__main__":
     # john.edit_phone("1234567890", "1112223333")
 
     # for someone in range(1, 14):
-    #     rand_user = Record(f"Name nr. {someone}", f"{someone + 10}/09/2023")
-    #     rand_user.add_phone(str(randint(1111111111, 9999999999)))
+
     #     if randint(1111111111, 9999999999) % 2:
+    #         rand_user = Record(
+    #             f"Name nr. {someone}", f"{someone + 10}/09/2023")
+    #     else:
+    #         rand_user = Record(f"Name nr. {someone}")
     #         rand_user.add_phone(str(randint(1111111111, 9999999999)))
+    #     rand_user.add_phone(str(randint(1111111111, 9999999999)))
 
     #     book.add_record(rand_user)
 
