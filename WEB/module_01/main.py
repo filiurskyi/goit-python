@@ -91,7 +91,7 @@ def show_all_handler():
         return "Contact list is empty"
 
 
-# @input_error
+@input_error
 def search_handler(input):
     '''usage:
         search [any str or int]'''
