@@ -75,10 +75,12 @@ class Birthday(Field):
 
 
 class Phone(Field):
-    def __init__(self, value):
+    def __init__(self, value: str) -> None:
         value = ''.join(filter(str.isdigit, value))
         if len(value) == 10:
             self.value = value
+        elif len(value) == 8:
+            self.value = "80" + value
         else:
             raise ValueError
 
@@ -104,9 +106,10 @@ class Record:
                 return p
         return
 
-    def add_phone(self, phone):
-        self.phones.append(Phone(phone))
-        return f"Added {phone} to {self.name}"
+    def add_phone(self, phone: str) -> str:
+        new_phone = Phone(phone)
+        self.phones.append(new_phone)
+        return f"Added {new_phone} to {self.name}"
 
     def remove_phone(self, phone):
         for p in self.phones:
@@ -164,10 +167,10 @@ class AddressBook(UserDict):
         self.save()
         return f"Sucsessfully added record:\n{record}"
 
-    def find(self, name):
+    def find(self, name: str) -> Record:
         return self.data.get(name, None)
 
-    def find_all(self, input):
+    def find_all(self, input: str) -> list:
         input = input.lower()
         find_result = []
         for contact in self.data.values():

@@ -37,15 +37,15 @@ def add_handler(name):
     return abook.add_record(new_user)
 
 
-
 @input_error
-def change_handler(arg):
+def change_handler(arg: list) -> str:
     '''usage: 
         change [name] [old phone] [new phone]
 
     phones should be either 7 or 10 char long'''
     name, old_phone, new_phone = arg
-    if abook.get(name, None).aphones:
+    name = name.lower()
+    if abook.get(name, None).phones:
         abook.get(name, None).edit_phone(old_phone, new_phone)
         return f"Changed {name} : {old_phone} to {new_phone}"
     else:
@@ -53,12 +53,12 @@ def change_handler(arg):
 
 
 @input_error
-def add_phone_handler(arg):
+def add_phone_handler(arg: list):
     '''usage:
         phone [name] [phone]
     phones should be either 7 or 10 char long'''
     name, phone = arg
-    result = abook.get(name).add_phone(phone)
+    result = abook.get(name.lower()).add_phone(phone)
     abook.save()
     return result
 
@@ -96,7 +96,7 @@ def search_handler(input):
 
 
 @input_error
-def find_handler(input):
+def find_handler(input: list):
     '''usage:
         find [name]
     or  find [first name] [second name]'''
@@ -111,7 +111,7 @@ def find_handler(input):
 
 
 @input_error
-def exit_handler():
+def exit_handler() -> None:
     abook.save()
     return "closing"
 
