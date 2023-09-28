@@ -27,7 +27,25 @@ class Field:
 
 
 class Name(Field):
-    pass
+    def __init__(self, value):
+        if len(value) == 2:
+            first_name, second_name = value
+            if not first_name.isalpha():
+                raise ValueError("First name may not have numbers")
+            elif not second_name.isalpha():
+                raise ValueError("Second name may not have numbers")
+            else:
+                new_user = f"{first_name}, {second_name}"
+                self.value = new_user
+        elif len(value) == 1:
+            value = value[0]
+            if not value.isalpha():
+                raise ValueError("Second name may not have numbers")
+            else:
+                new_user = value
+                self.value = new_user
+        else:
+            raise ValueError("Wrong name input")
 
 
 class Birthday(Field):

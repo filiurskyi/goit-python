@@ -32,24 +32,10 @@ def add_handler(name):
     or: add [name]
 
     names should not include numbers!!'''
-    if len(name) == 2:
-        first_name, second_name = name
-        if not first_name.isalpha():
-            raise ValueError("First name may not have numbers")
-        elif not second_name.isalpha():
-            raise ValueError("Second name may not have numbers")
-        else:
-            new_user = addressbook.Record(f"{first_name}, {second_name}")
-            return abook.add_record(new_user)
-    elif len(name) == 1:
-        name = name[0]
-        if not name.isalpha():
-            raise ValueError("Second name may not have numbers")
-        else:
-            new_user = addressbook.Record(name)
-            return abook.add_record(new_user)
-    else:
-        raise ValueError("Wrong name input")
+
+    new_user = addressbook.Record(name)
+    return abook.add_record(new_user)
+
 
 
 @input_error
@@ -59,7 +45,7 @@ def change_handler(arg):
 
     phones should be either 7 or 10 char long'''
     name, old_phone, new_phone = arg
-    if abook.get(name, None).phones:
+    if abook.get(name, None).aphones:
         abook.get(name, None).edit_phone(old_phone, new_phone)
         return f"Changed {name} : {old_phone} to {new_phone}"
     else:
