@@ -35,7 +35,7 @@ class Name(Field):
             elif not second_name.isalpha():
                 raise ValueError("Second name may not have numbers")
             else:
-                new_user = f"{first_name}, {second_name}"
+                new_user = f"{first_name.lower()}, {second_name.lower()}"
                 self.value = new_user
         elif len(value) == 1:
             value = value[0]
@@ -43,9 +43,12 @@ class Name(Field):
                 raise ValueError("Second name may not have numbers")
             else:
                 new_user = value
-                self.value = new_user
+                self.value = new_user.lower()
         else:
             raise ValueError("Wrong name input")
+
+    def __str__(self):
+        return self.value.title()
 
 
 class Birthday(Field):
@@ -93,7 +96,7 @@ class Record:
         self.birthday = Birthday(birthday)
 
     def __str__(self):
-        return f"Contact name: {self.name.value}\nBirthday: {self.birthday}\nPhones: {'; '.join(p.value for p in self.phones)}"
+        return f"Contact name: {self.name}\nBirthday: {self.birthday}\nPhones: {'; '.join(p.value for p in self.phones)}"
 
     def find_phone(self, phone):
         for p in self.phones:
@@ -103,7 +106,7 @@ class Record:
 
     def add_phone(self, phone):
         self.phones.append(Phone(phone))
-        return f"Added {phone} to {self.name.value}"
+        return f"Added {phone} to {self.name}"
 
     def remove_phone(self, phone):
         for p in self.phones:
@@ -168,11 +171,11 @@ class AddressBook(UserDict):
         input = input.lower()
         find_result = []
         for contact in self.data.values():
-            if input in contact.name.value.lower() and contact.name.value not in find_result:
-                find_result.append(contact.name.value)
+            if input in str(contact.name).lower() and contact.name not in find_result:
+                find_result.append(contact.name)
             for single_phone in contact.phones:
-                if input in str(single_phone).lower() and contact.name.value not in find_result:
-                    find_result.append(contact.name.value)
+                if input in str(single_phone) and contact.name not in find_result:
+                    find_result.append(contact.name)
         return find_result
 
     def delete(self, record):

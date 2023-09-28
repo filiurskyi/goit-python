@@ -102,9 +102,9 @@ def find_handler(input):
     or  find [first name] [second name]'''
     if len(input) == 1:
         input = input[0]
-        return abook.find(input)
+        return abook.find(input.lower())
     elif len(input) == 2:
-        name, surname = input
+        name, surname = input.lower()
         return abook.find(f"{name}, {surname}")
     else:
         raise ValueError("Wrong find input")
