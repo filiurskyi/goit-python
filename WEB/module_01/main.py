@@ -50,6 +50,30 @@ def change_handler(arg: list) -> str:
         return f"Changed {name} : {old_phone} to {new_phone}"
     else:
         return "Contact does not exist"
+    
+
+@input_error
+def change_birthday(arg):
+    '''usage: 
+        birthday [name] [new birthday in format xx/xx/xxxx]'''
+    name, birthday = arg
+    if abook.get(name, None):
+        abook.get(name, None).edit_birthday(birthday)
+        return f"Changed birthday to {birthday}"
+    else:
+        return "Contact does not exist"
+
+
+@input_error
+def change_birthday(arg):
+    '''usage: 
+        birthday [name] [new birthday in format xx/xx/xxxx]'''
+    name, birthday = arg
+    if abook.get(name, None):
+        abook.get(name, None).edit_birthday(birthday)
+        return f"Changed birthday to {birthday}"
+    else:
+        return "Contact does not exist"
 
 
 @input_error
@@ -120,7 +144,7 @@ def main():
     COMMANDS_NO_ARG = {"hello": hello_handler, "show all": show_all_handler,
                        "good bye": exit_handler, "close": exit_handler, "exit": exit_handler}
     COMMANDS_ARG = {"add": add_handler,
-                    "change": change_handler, "phone": add_phone_handler, "search": search_handler, "find": find_handler}
+                    "change": change_handler, "birthday":change_birthday, "phone": add_phone_handler, "search": search_handler, "find": find_handler}
     out = True
     print("Hello User!")
     while out != "closing":

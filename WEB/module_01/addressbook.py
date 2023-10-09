@@ -125,6 +125,9 @@ class Record:
                 self.add_phone(new_phone)
                 return self
         raise ValueError
+    
+    def edit_birthday(self, birthday):
+        self.birthday = Birthday(birthday)
 
     def days_to_birthday(self):
         if self.birthday.birthday is None:
