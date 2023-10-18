@@ -65,18 +65,6 @@ def change_birthday(arg):
 
 
 @input_error
-def change_birthday(arg):
-    '''usage: 
-        birthday [name] [new birthday in format xx/xx/xxxx]'''
-    name, birthday = arg
-    if abook.get(name, None):
-        abook.get(name, None).edit_birthday(birthday)
-        return f"Changed birthday to {birthday}"
-    else:
-        return "Contact does not exist"
-
-
-@input_error
 def add_phone_handler(arg: list):
     '''usage:
         phone [name] [phone]
