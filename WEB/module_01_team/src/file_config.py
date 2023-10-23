@@ -1,2 +1,5 @@
-FILE_CONTACT_BOOK = "../../contact_book.json"
-FILE_NOTES = "../../notes.json"
+# FILE_CONTACT_BOOK = "../../contact_book.bin"
+# FILE_NOTES = "../../notes.bin"
+
+FILE_CONTACT_BOOK = "contact_book.bin"
+FILE_NOTES = "notes.bin"
