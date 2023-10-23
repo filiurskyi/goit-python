@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from src.error_handler import *
+from error_handler import *
 
 
 class Field:
@@ -176,3 +176,15 @@ class Note:
     def edit_note_text(self, note: list):
         text = " ".join(note)
         self.note = NotebookNote(text)
+
+
+class ConsoleOutput():
+    pass
+
+class ConsolePrint(ConsoleOutput):
+    '''abstract class for console output'''
+    pass
+
+    def output(self, console_output: str) -> None:
+        '''prints str to console'''
+        print(console_output)
