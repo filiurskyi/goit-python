@@ -1,10 +1,10 @@
+from abc import ABC
 from datetime import datetime
-from abc import ABC, abstractmethod
+
 from error_handler import *
 
 
 class Field(ABC):
-    @abstractmethod
     def __init__(self, value):
         self.value = value
 
@@ -185,9 +185,8 @@ class ConsoleOutput(ABC):
 
 
 class ConsolePrint(ConsoleOutput):
-    '''abstract class for console output'''
-    pass
+    """abstract class for console output"""
 
     def output(self, console_output: str) -> None:
-        '''prints str to console'''
+        """prints str to console"""
         print(console_output)
