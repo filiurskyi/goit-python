@@ -10,9 +10,9 @@ def main():
     while globals.IS_LISTENING:
         user_line = input(INVITE_MESSAGE)
         if user_line:
-            command, data = parser(user_line)
-            handler = get_handler(command)
             try:
+                command, data = parser(user_line)
+                handler = get_handler(command)
                 result = handler(data)
                 console.output(result)
                 continue
