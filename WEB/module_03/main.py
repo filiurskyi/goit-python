@@ -2,20 +2,19 @@ import sys
 from pathlib import Path
 from normalize import normalize
 from threading import Thread
-import logging
 import json
 import shutil
 
 
 def classify(file_name, file="extensions.json"):
-    '''Return file classification
+    """Return file classification
 
     file_name -- str input filename
     file -- json with file types and extensions
 
     returns str output classification of file
     returns None if extension is unknown
-    '''
+    """
     with open(file, "r") as f:
         types = json.loads(f.read())
     for type, extensions in types.items():
@@ -28,20 +27,20 @@ def classify(file_name, file="extensions.json"):
 
 
 def log_unknown_ext(ext):
-    '''log unknown extensions
+    """log unknown extensions
 
-    ext -- str with extension name'''
+    ext -- str with extension name"""
     if not ext in unknown_extensions:
         unknown_extensions.append(ext)
 
 
 def filename_to_str(filename):
-    '''convert and split path obj to string tuple'''
+    """convert and split path obj to string tuple"""
     return (str(filename.stem), str(filename.suffix))
 
 
 def rename_files(path):
-    '''rename files and folders'''
+    """rename files and folders"""
     name = filename_to_str(path)[0]
     ext = filename_to_str(path)[1]
     if not classify(path):
@@ -101,8 +100,7 @@ def move(path, root_path, filetype):
         except FileExistsError:
             while new_path.exists():
                 char = counter * "_"
-                new_path = root_path / \
-                    f"{filetype}\{path.stem}{char}{path.suffix}"
+                new_path = root_path / f"{filetype}\{path.stem}{char}{path.suffix}"
                 counter += 1
             path.resolve().rename(new_path)
         except:
@@ -113,9 +111,10 @@ def move(path, root_path, filetype):
 
 
 def parse_main(path, root_path):
-    '''Parsing folder index recursively and making major decisions
+    """Parsing folder index recursively and making major decisions
     path -- str name of folder
-    '''
+    """
+    # print(f"path is {path}")
     try:
         for file_path in path.iterdir():
             filename_normalized = rename_files(file_path)
@@ -127,8 +126,8 @@ def parse_main(path, root_path):
         print("Folder not found")
 
 
-def multithread(func: function, args: tuple):
-    th = Thread(target=func, args= args)
+def multithread(func, args: tuple):
+    th = Thread(target=func, args=args)
     th.start()
 
 
@@ -138,7 +137,8 @@ def main_prog():
         parse_main(path, path)
         print(f"Unknown extensions are:", " ".join(unknown_extensions))
 
+
 # main loop
-if __name__ == '__main__':
+if __name__ == "__main__":
     unknown_extensions = []
     main_prog()
