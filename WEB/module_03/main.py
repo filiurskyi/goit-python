@@ -127,7 +127,7 @@ def parse_main(path, root_path):
         print("Folder not found")
 
 
-def multithread(func, args: tuple):
+def multithread(func: function, args: tuple):
     th = Thread(target=func, args= args)
     th.start()
 
