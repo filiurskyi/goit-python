@@ -1,7 +1,6 @@
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 import logging
 from time import time
-import os
 
 # from datetime import time
 
@@ -44,7 +43,7 @@ def normal_factorize(*numbers):
 def multiprocess_factorize(*numbers):
     start_time = time()
     logger.info("running multiprocess_factorize")
-    cpus = os.cpu_count()
+    cpus = cpu_count()
     with Pool(processes=cpus) as pool:
         result = pool.map(factorize, numbers)
 
