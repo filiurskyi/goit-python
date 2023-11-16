@@ -6,5 +6,8 @@ WORKDIR $APP_HOME
 
 COPY . .
 
+VOLUME $APP_HOME/storage
+
+EXPOSE 3000
 
 ENTRYPOINT ["python", "/app/app.py"]
