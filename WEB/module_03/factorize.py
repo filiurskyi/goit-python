@@ -27,14 +27,14 @@ def factorize(number):
     for i in range(1, number + 1):
         if number % i == 0:
             result.append(i)
-    logger.info(f"{result=}")
+    logger.debug(f"{result=}")
     return result
 
 
 def normal_factorize(*numbers):
     start_time = time()
     logger.info("running normal_factorize")
-    result = map(factorize, numbers)
+    result = list(map(factorize, numbers))
     end_time = time()
     func_run_time = end_time - start_time
     logger.info(f"normal func run time is : {func_run_time}")
@@ -46,7 +46,7 @@ def multiprocess_factorize(*numbers):
     start_time = time()
     cpus = cpu_count()
     with Pool(processes=cpus) as pool:
-        result = pool.map(factorize, numbers)
+        result = list(pool.map(factorize, numbers))
     end_time = time()
     func_run_time = end_time - start_time
     logger.info(f"multiprozess func run time is : {func_run_time}")
@@ -54,8 +54,8 @@ def multiprocess_factorize(*numbers):
 
 
 if __name__ == "__main__":
-    a, b, c, d = normal_factorize(1280000, 2550000, 9999900, 106510600)
-    e, f, g, h = multiprocess_factorize(1280000, 2550000, 9999900, 106510600)
+    a, b, c, d = normal_factorize(128000, 255000, 999990, 10651060)
+    e, f, g, h = multiprocess_factorize(128000, 255000, 999990, 10651060)
 
     # assert a == e
     # assert b == f
