@@ -7,7 +7,8 @@ from pathlib import Path
 
 HOST = "127.0.0.1"
 PORT = 5000
-file_location = "./storage/data.json"
+file_location = Path("./storage")
+file_path = file_location / "data.json"
 
 
 def listen(host=HOST, port=PORT):
@@ -46,13 +47,18 @@ def submit(data, host=HOST, port=PORT):
                 sleep(1)
 
 
-def append_to_json(data: dict, path=file_location):
-    if not Path(path).exists():
-        with open(path, 'r') as f:
+def append_to_json(data: dict, path=file_path):
+    new_data = {str(datetime.now()): data}
+    if Path(path).exists():
+        with open(path, "r") as f:
             exist_data = json.load(f)
-        exist_data.update({str(datetime.now()): data})
-        with open(path, 'w') as f:
+        exist_data.update(new_data)
+        with open(path, "w") as f:
             f.write(json.dumps(exist_data, sort_keys=True, indent=4))
+    else:
+        file_location.mkdir(parents=True, exist_ok=True)
+        with open(path, "w") as f:
+            f.write(json.dumps(new_data, sort_keys=True, indent=4))
 
 
 if __name__ == "__main__":
