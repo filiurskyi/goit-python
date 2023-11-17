@@ -1,11 +1,8 @@
-import platform
-
 import aiohttp
 import asyncio
 
 
-async def main():
-    date = "17.11.2023"
+async def api_getter(date="17.11.2023"):
     async with aiohttp.ClientSession() as session:
         async with session.get(f'https://api.privatbank.ua/p24api/exchange_rates?json&date={date}') as response:
 
@@ -17,6 +14,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    if platform.system() == 'Windows':
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(main())
+    asyncio.run(api_getter())
