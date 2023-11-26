@@ -1,7 +1,7 @@
 import asyncio
 import json
 from abc import ABC
-from datetime import date
+from datetime import date, timedelta
 from pprint import pprint
 
 import aiohttp
@@ -53,6 +53,7 @@ class CurrenciesAggregator:
     def __init__(self, currencies_json: str):
         self.currencies = {}
         currencies_json = json.loads(currencies_json)
+        print(currencies_json)
         for currency in currencies_json["exchangeRate"]:
             self.currencies.update({Currency(currency).name: Currency(currency)})
 
@@ -69,7 +70,6 @@ class CurrenciesAggregator:
 
 
 async def pb_api_getter(get_date=date.today().strftime("%d.%m.%Y")):
-    result = []
     async with aiohttp.ClientSession() as session:
         async with session.get(
             f"https://api.privatbank.ua/p24api/exchange_rates?json&date={get_date}"
@@ -78,9 +78,10 @@ async def pb_api_getter(get_date=date.today().strftime("%d.%m.%Y")):
             print("Content-type:", response.headers["content-type"])
             resp_json = await response.text()
             currencies_aggregator = CurrenciesAggregator(resp_json)
-            for curr in currencies_interest:
-                result.append(currencies_aggregator.get_sale_purchase(curr))
-            return result
+            out = {}
+            for currency in currencies_interest:
+                out.update({get_date: currencies_aggregator.get_sale_purchase(currency)})
+            return out
 
 
 if __name__ == "__main__":

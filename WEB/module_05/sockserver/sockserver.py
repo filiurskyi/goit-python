@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 
 import names
@@ -6,6 +7,8 @@ import websockets
 from websockets import WebSocketProtocolError, WebSocketServerProtocol
 
 from app import pb_api_getter
+from datetime import date, timedelta
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -37,11 +40,27 @@ class SocketServer:
 
     async def distrubute(self, ws: WebSocketServerProtocol):
         async for message in ws:
-            if message == "exchange":
-                m = await pb_api_getter()
+            msg = message.split()
+
+            if msg[0] == "exchange" and len(msg) == 1:
+                m = await self.get_currencies(1)
                 await self.send_to_clients(m)
+            elif msg[0] == "exchange" and msg[1].isnumeric():
+                m = await self.get_currencies(int(msg[1]))
+                await self.send_to_clients(f"<b>Exchange rate:</b>: {m}")
             else:
-                await self.send_to_clients(f"{ws.name}: {message}")
+                await self.send_to_clients(f"<b>{ws.name}</b>: {message}")
+
+    async def get_currencies(self, days=2):
+        if days > 10:
+            return "too much days, enter 10 or less"
+        else:
+            result = []
+            for day in range(0, days):
+                dt = date.today() - timedelta(days=day)
+                data = await pb_api_getter(get_date=dt.strftime("%d.%m.%Y"))
+                result.append(data)
+        return json.dumps(result)
 
 
 async def run_socket():
