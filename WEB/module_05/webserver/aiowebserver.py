@@ -6,7 +6,7 @@ routes = web.RouteTableDef()
 
 @routes.get("/")
 async def index_page(request):
-    with open("./index.html", "r") as f:
+    with open("index.html", "r") as f:
         html_text = f.read()
     response = web.Response(text=html_text, content_type="text/html")
     return response

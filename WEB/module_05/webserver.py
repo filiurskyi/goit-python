@@ -10,7 +10,7 @@ class HttpHandler(BaseHTTPRequestHandler):
         pr_url = urllib.parse.urlparse(self.path)
         match pr_url.path:
             case "/":
-                self.send_html_file("index.html")
+                self.send_html_file("webserver/index.html")
             case "/message":
                 self.send_html_file("message.html")
             case _:

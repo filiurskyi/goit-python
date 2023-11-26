@@ -5,17 +5,14 @@ ENV APP_HOME /app
 
 WORKDIR $APP_HOME
 
-COPY requirements.txt .
+COPY ../requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY .. .
 
 #VOLUME $APP_HOME/storage
 
-EXPOSE 3000
-
-WORKDIR $APP_HOME/app
+EXPOSE 8080
 
 ENTRYPOINT ["python", "sockserver.py"]
-#ENTRYPOINT ["python", "webserver.py"]

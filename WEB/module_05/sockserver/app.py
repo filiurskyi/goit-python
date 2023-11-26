@@ -69,6 +69,7 @@ class CurrenciesAggregator:
 
 
 async def pb_api_getter(get_date=date.today().strftime("%d.%m.%Y")):
+    result = []
     async with aiohttp.ClientSession() as session:
         async with session.get(
             f"https://api.privatbank.ua/p24api/exchange_rates?json&date={get_date}"
@@ -78,7 +79,8 @@ async def pb_api_getter(get_date=date.today().strftime("%d.%m.%Y")):
             resp_json = await response.text()
             currencies_aggregator = CurrenciesAggregator(resp_json)
             for curr in currencies_interest:
-                pprint(currencies_aggregator.get_sale_purchase(curr))
+                result.append(currencies_aggregator.get_sale_purchase(curr))
+            return result
 
 
 if __name__ == "__main__":

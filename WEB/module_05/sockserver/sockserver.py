@@ -46,7 +46,7 @@ class SocketServer:
 
 async def run_socket():
     socket_server = SocketServer()
-    async with websockets.serve(socket_server.ws_handler, "localhost", 8080):
+    async with websockets.serve(socket_server.ws_handler, "127.0.0.1", 8080):
         await asyncio.Future()  # run forever
 
 

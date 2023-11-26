@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  sockserver:
+    build:
+      context: ./sockserver  # The path to the directory containing the Dockerfile for sockserver.app
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+  aiowebserver:
+    build:
+      context: ./webserver  # The path to the directory containing the Dockerfile for aiowebserver.py
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

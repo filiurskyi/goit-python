@@ -1,6 +1,6 @@
 console.log('Hello world!')
 
-const ws = new WebSocket('ws://localhost:8080')
+const ws = new WebSocket('ws://127.0.0.1:8080')
 
 formChat.addEventListener('submit', (e) => {
     e.preventDefault()

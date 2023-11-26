@@ -3,8 +3,8 @@ import asyncio
 
 import websockets
 from aiohttp import web
-from aiowebserver import aiohttp_main
-from sockserver import SocketServer, run_socket
+from webserver.aiowebserver import aiohttp_main
+from sockserver import SocketServer
 
 
 async def main_sock():
