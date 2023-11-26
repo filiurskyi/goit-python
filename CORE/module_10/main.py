@@ -15,7 +15,7 @@ class Name(Field):
 
 class Phone(Field):
     def __init__(self, value):
-        value = ''.join(filter(str.isdigit, value))
+        value = "".join(filter(str.isdigit, value))
         if len(value) == 10:
             self.value = value
         else:
@@ -61,7 +61,6 @@ class Record:
 
 
 class AddressBook(UserDict):
-
     def __init__(self):
         self.data = {}
 
@@ -77,6 +76,7 @@ class AddressBook(UserDict):
             del self.data[record]
         else:
             return
+
 
 if __name__ == "__main__":
     # Створення нової адресної книги

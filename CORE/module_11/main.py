@@ -1,5 +1,5 @@
 from collections import UserDict
-from datetime import datetime, date, timedelta
+from datetime import date, datetime, timedelta
 
 
 class Field:
@@ -28,7 +28,7 @@ class Birthday(Field):
         if birthday is None:
             self.birthday = birthday
         else:
-            birthday = ''.join(filter(str.isdigit, birthday))
+            birthday = "".join(filter(str.isdigit, birthday))
             if len(birthday) == 6:
                 dt_bd = datetime.strptime(birthday, "%d%m%y")
                 self.birthday = dt_bd
@@ -36,13 +36,12 @@ class Birthday(Field):
                 dt_bd = datetime.strptime(birthday, "%d%m%Y")
                 self.birthday = dt_bd
             else:
-                raise ValueError(
-                    "Date should be in format dd/mm/yy or dd/mm/yyyy")
+                raise ValueError("Date should be in format dd/mm/yy or dd/mm/yyyy")
 
 
 class Phone(Field):
     def __init__(self, value):
-        value = ''.join(filter(str.isdigit, value))
+        value = "".join(filter(str.isdigit, value))
         if len(value) == 10:
             self.value = value
         else:
@@ -91,14 +90,13 @@ class Record:
         next_birthday = birthday.replace(year=current_year)
 
         if next_birthday < today_date:
-            next_birthday = birthday.replace(year=current_year+1)
+            next_birthday = birthday.replace(year=current_year + 1)
         days_to_bd = next_birthday - today_date
 
         return days_to_bd.days
 
 
 class AddressBook(UserDict):
-
     def __init__(self):
         self.data = {}
 
@@ -143,8 +141,7 @@ if __name__ == "__main__":
 
     # creating big list
     for someone in range(1, 14):
-        book.add_record(
-            Record(f"Name num{someone}", f"{someone + 10}/09/2023"))
+        book.add_record(Record(f"Name num{someone}", f"{someone + 10}/09/2023"))
 
     # Додавання запису John до адресної книги
     book.add_record(john_record)

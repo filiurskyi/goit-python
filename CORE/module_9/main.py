@@ -1,5 +1,3 @@
-
-
 def input_error(func):
     def wrapper(*args: str):
         try:
@@ -15,6 +13,7 @@ def input_error(func):
         except Exception as e:
             result = f"an unexpected error occurred: {e}"
         return result
+
     return wrapper
 
 
@@ -52,9 +51,8 @@ def phone_handler(arg):
 @input_error
 def show_all_handler():
     if len(contacts) == 0:
-
         return "Your contact list is empty"
-    return '\n'.join([f'{name} : {phone}' for name, phone in contacts.items()])
+    return "\n".join([f"{name} : {phone}" for name, phone in contacts.items()])
 
 
 @input_error
@@ -62,12 +60,19 @@ def exit_handler():
     return "closing"
 
 
-
 def main():
-    COMMANDS_NO_ARG = {"hello": hello_handler, "show all": show_all_handler,
-                       "good bye": exit_handler, "close": exit_handler, "exit": exit_handler}
-    COMMANDS_ARG = {"add": add_handler,
-                    "change": change_handler, "phone": phone_handler}
+    COMMANDS_NO_ARG = {
+        "hello": hello_handler,
+        "show all": show_all_handler,
+        "good bye": exit_handler,
+        "close": exit_handler,
+        "exit": exit_handler,
+    }
+    COMMANDS_ARG = {
+        "add": add_handler,
+        "change": change_handler,
+        "phone": phone_handler,
+    }
     out = True
     print("Hello User!")
     while out != "closing":
@@ -87,6 +92,6 @@ def main():
 
 
 # main loop
-if __name__ == '__main__':
+if __name__ == "__main__":
     contacts = {}
     main()

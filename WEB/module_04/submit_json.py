@@ -1,9 +1,9 @@
-import socket
 import json
-from time import sleep
-from datetime import datetime
+import socket
 import urllib.parse
+from datetime import datetime
 from pathlib import Path
+from time import sleep
 
 HOST = "127.0.0.1"
 PORT = 5000

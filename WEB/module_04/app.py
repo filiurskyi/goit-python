@@ -1,8 +1,9 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import urllib.parse
-import threading
 import mimetypes
+import threading
+import urllib.parse
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+
 import submit_json
 
 

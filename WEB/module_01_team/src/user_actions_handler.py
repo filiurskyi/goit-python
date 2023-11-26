@@ -1,22 +1,16 @@
-from pathlib import Path
 import pickle
+from pathlib import Path
 
-from error_handler import *
-from address_book.contact_book import AddressBook
-from notes.note_book import NoteBook
 import globals
-from utils.constants import (
-    WARNING_MESSAGE,
-    ABORTING_OPERATION_MESSAGE,
-    SORTING_PROGRESS_MESSAGE,
-    BOT_COMMANDS,
-    GREETING_MESSAGE,
-    BYE_MESSAGE,
-    HELP_INFO,
-)
+from address_book.contact_book import AddressBook
+from error_handler import *
 from file_config import FILE_NOTES
 from notes import note_book
+from notes.note_book import NoteBook
 from sort_file import sort
+from utils.constants import (ABORTING_OPERATION_MESSAGE, BOT_COMMANDS,
+                             BYE_MESSAGE, GREETING_MESSAGE, HELP_INFO,
+                             SORTING_PROGRESS_MESSAGE, WARNING_MESSAGE)
 
 
 def get_book():

@@ -50,8 +50,7 @@ class Birthday(Field):
                 dt_bd = datetime.strptime(birthday, "%d%m%Y")
                 self.birthday = dt_bd
             else:
-                raise ValueError(
-                    "Date should be in format dd/mm/yy or dd/mm/yyyy")
+                raise ValueError("Date should be in format dd/mm/yy or dd/mm/yyyy")
 
     def __str__(self):
         if self.birthday is None:

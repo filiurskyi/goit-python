@@ -1,12 +1,11 @@
+import os
+import pickle
 from collections import UserDict
 from datetime import datetime
 from random import randint
-import os
-import pickle
-
 
 dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'adressbook.bin')
+filename = os.path.join(dirname, "adressbook.bin")
 
 
 class Field:
@@ -35,7 +34,7 @@ class Birthday(Field):
         if birthday is None:
             self.birthday = birthday
         else:
-            birthday = ''.join(filter(str.isdigit, birthday))
+            birthday = "".join(filter(str.isdigit, birthday))
             if len(birthday) == 6:
                 dt_bd = datetime.strptime(birthday, "%d%m%y")
                 self.birthday = dt_bd
@@ -43,19 +42,18 @@ class Birthday(Field):
                 dt_bd = datetime.strptime(birthday, "%d%m%Y")
                 self.birthday = dt_bd
             else:
-                raise ValueError(
-                    "Date should be in format dd/mm/yy or dd/mm/yyyy")
+                raise ValueError("Date should be in format dd/mm/yy or dd/mm/yyyy")
 
     def __str__(self):
         if self.birthday is None:
-            return "\"\""
+            return '""'
         else:
             return str(self.birthday.date())
 
 
 class Phone(Field):
     def __init__(self, value):
-        value = ''.join(filter(str.isdigit, value))
+        value = "".join(filter(str.isdigit, value))
         if len(value) == 10:
             self.value = value
         else:
@@ -110,14 +108,13 @@ class Record:
         next_birthday = birthday.replace(year=current_year)
 
         if next_birthday < today_date:
-            next_birthday = birthday.replace(year=current_year+1)
+            next_birthday = birthday.replace(year=current_year + 1)
         days_to_bd = next_birthday - today_date
 
         return days_to_bd.days
 
 
 class AddressBook(UserDict):
-
     def __init__(self):
         try:
             with open(filename, "rb") as f:
@@ -192,10 +189,8 @@ if __name__ == "__main__":
     # john.edit_phone("1234567890", "1112223333")
 
     for someone in range(1, 14):
-
         if randint(1111111111, 9999999999) % 2:
-            rand_user = Record(
-                f"Name nr. {someone}", f"{someone + 10}/09/2023")
+            rand_user = Record(f"Name nr. {someone}", f"{someone + 10}/09/2023")
         else:
             rand_user = Record(f"Name nr. {someone}")
             rand_user.add_phone(str(randint(1111111111, 9999999999)))

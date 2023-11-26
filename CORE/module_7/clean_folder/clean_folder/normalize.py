@@ -1,6 +1,43 @@
 CYRILLIC_SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
-TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
-               "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
+TRANSLATION = (
+    "a",
+    "b",
+    "v",
+    "g",
+    "d",
+    "e",
+    "e",
+    "j",
+    "z",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "r",
+    "s",
+    "t",
+    "u",
+    "f",
+    "h",
+    "ts",
+    "ch",
+    "sh",
+    "sch",
+    "",
+    "y",
+    "",
+    "e",
+    "yu",
+    "ya",
+    "je",
+    "i",
+    "ji",
+    "g",
+)
 
 TRANS = {}
 cyr = list(CYRILLIC_SYMBOLS)
@@ -11,15 +48,15 @@ for cy, tr in zip(cyr, TRANSLATION):
 
 
 def translate(name):
-    '''Takes string, checks if cyrillic, and then translliterates it
+    """Takes string, checks if cyrillic, and then translliterates it
 
     name -- str
-    '''
+    """
     return name.translate(TRANS)
 
 
 def normalize(name):
-    '''input is str'''
+    """input is str"""
     fname = list(name)
 
     # iterate through every char in file name and replace unknown chars with "_"

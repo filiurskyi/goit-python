@@ -1,8 +1,8 @@
-from collections import UserDict
 import pickle
+from collections import UserDict
 
-from record import Record
 from file_config import FILE_CONTACT_BOOK
+from record import Record
 
 
 class AddressBook(UserDict):
@@ -43,8 +43,8 @@ class AddressBook(UserDict):
         find_result = []
         for contact in self.data.values():
             if (
-                    user_input in str(contact.name).lower()
-                    and contact.name not in find_result
+                user_input in str(contact.name).lower()
+                and contact.name not in find_result
             ):
                 find_result.append(contact.name)
             for single_phone in contact.phones:

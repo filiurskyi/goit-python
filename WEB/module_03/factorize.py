@@ -1,5 +1,5 @@
-from multiprocessing import Pool, cpu_count
 import logging
+from multiprocessing import Pool, cpu_count
 from time import time
 
 # from datetime import time

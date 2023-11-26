@@ -5,11 +5,11 @@ audio_extensions = ("MP3", "OGG", "WAV", "AMR")
 archive_extensions = ("ZIP", "GZ", "TAR")
 
 registered_extensions = (
-        image_extensions
-        + video_extensions
-        + docs_extensions
-        + audio_extensions
-        + archive_extensions
+    image_extensions
+    + video_extensions
+    + docs_extensions
+    + audio_extensions
+    + archive_extensions
 )
 
 images = []

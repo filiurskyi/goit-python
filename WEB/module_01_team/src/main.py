@@ -1,8 +1,8 @@
+import globals
+from record import ConsolePrint
 from user_actions_handler import get_handler
 from utils.constants import INVITE_MESSAGE, TYPE_OR_ATTRIBUTE_ERROR_MESSAGE
-import globals
 from utils.parser import parser
-from record import ConsolePrint
 
 
 def main():

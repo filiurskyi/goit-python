@@ -1,9 +1,10 @@
-import sys
-from pathlib import Path
-from normalize import normalize
-from threading import Thread
 import json
 import shutil
+import sys
+from pathlib import Path
+from threading import Thread
+
+from normalize import normalize
 
 
 def classify(file_name, file="extensions.json"):

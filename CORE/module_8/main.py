@@ -1,5 +1,5 @@
-from datetime import date, datetime, timedelta
 from collections import defaultdict
+from datetime import date, datetime, timedelta
 
 
 def get_birthdays_per_week(users):
@@ -11,8 +11,8 @@ def get_birthdays_per_week(users):
         return {}
 
     for user in users:
-        name = user['name']
-        birthday = user['birthday']
+        name = user["name"]
+        birthday = user["birthday"]
         birthday_this_year = birthday.replace(year=current_year)
         if birthday.month == 1:
             birthday_this_year = birthday.replace(year=current_year + 1)
@@ -22,10 +22,9 @@ def get_birthdays_per_week(users):
             continue
 
         if birthday_this_year.weekday() >= 5:
-            birthday_this_year += timedelta(days=(7 -
-                                            birthday_this_year.weekday()))
+            birthday_this_year += timedelta(days=(7 - birthday_this_year.weekday()))
 
-        day_name = birthday_this_year.strftime('%A')
+        day_name = birthday_this_year.strftime("%A")
         users_list[day_name].append(name)
 
     return users_list

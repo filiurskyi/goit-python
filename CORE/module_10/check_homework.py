@@ -5,11 +5,10 @@
 ==============================================================================
 """
 
-from collections import UserDict
 import unittest
+from collections import UserDict
 
 import main
-
 
 RED = "\033[91m"
 GREEN = "\033[92m"
