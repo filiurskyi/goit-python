@@ -5,9 +5,37 @@ from datetime import date
 from pprint import pprint
 
 import aiohttp
-from app_config import CURRENCIES
 
 currencies_interest = ["EUR", "USD"]
+
+CURRENCIES = [
+    "AUD",
+    "AZN",
+    "BYN",
+    "CAD",
+    "CHF",
+    "CNY",
+    "CZK",
+    "DKK",
+    "EUR",
+    "GBP",
+    "GEL",
+    "HUF",
+    "ILS",
+    "JPY",
+    "KZT",
+    "MDL",
+    "NOK",
+    "PLN",
+    "SEK",
+    "SGD",
+    "TMT",
+    "TRY",
+    "UAH",
+    "USD",
+    "UZS",
+    "XAU",
+]
 
 
 class BaseCurrency(ABC):
@@ -40,7 +68,7 @@ class CurrenciesAggregator:
         }
 
 
-async def pb_api_getter(get_date="17.11.2023"):
+async def pb_api_getter(get_date=date.today().strftime("%d.%m.%Y")):
     async with aiohttp.ClientSession() as session:
         async with session.get(
             f"https://api.privatbank.ua/p24api/exchange_rates?json&date={get_date}"

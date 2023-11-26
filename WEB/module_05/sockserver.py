@@ -1,25 +1,13 @@
 import asyncio
 import logging
 
-import aiohttp
 import names
 import websockets
-from webserver import run_web
 from websockets import WebSocketProtocolError, WebSocketServerProtocol
 
+from app import pb_api_getter
+
 logging.basicConfig(level=logging.INFO)
-
-async def get_exchange():
-    async with aiohttp.ClientSession() as session:
-        async with session.get(
-            "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5"
-        ) as resp:
-            if resp.status == 200:
-                r = await resp.json()
-                (exc,) = list(filter(lambda el: el["ccy"] == "USD", r))
-            return f"USD: buy: {exc['buy']}, sale: {exc['sale']}"
-
-
 
 
 class SocketServer:
@@ -50,7 +38,7 @@ class SocketServer:
     async def distrubute(self, ws: WebSocketServerProtocol):
         async for message in ws:
             if message == "exchange":
-                m = await get_exchange()
+                m = await pb_api_getter()
                 await self.send_to_clients(m)
             else:
                 await self.send_to_clients(f"{ws.name}: {message}")
@@ -58,10 +46,9 @@ class SocketServer:
 
 async def run_socket():
     socket_server = SocketServer()
-    async with websockets.serve(socket_server.ws_handler, "localhost", 8085):
+    async with websockets.serve(socket_server.ws_handler, "localhost", 8080):
         await asyncio.Future()  # run forever
 
 
 if __name__ == "__main__":
     asyncio.run(run_socket())
-    asyncio.run(run_web())

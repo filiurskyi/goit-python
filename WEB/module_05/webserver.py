@@ -1,9 +1,8 @@
+import asyncio
 import mimetypes
-import threading
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-
 
 
 class HttpHandler(BaseHTTPRequestHandler):
@@ -46,7 +45,7 @@ class HttpHandler(BaseHTTPRequestHandler):
             self.wfile.write(file.read())
 
 
-def run_web(server_class=HTTPServer, handler_class=HttpHandler):
+async def run_web(server_class=HTTPServer, handler_class=HttpHandler):
     server_address = ("", 3000)
     http = server_class(server_address, handler_class)
     try:
@@ -56,5 +55,4 @@ def run_web(server_class=HTTPServer, handler_class=HttpHandler):
 
 
 if __name__ == "__main__":
-    web_serv = threading.Thread(target=run_web)
-    web_serv.start()
+    asyncio.run(run_web())
