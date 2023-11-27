@@ -47,9 +47,9 @@ class SocketServer:
                 await self.send_to_clients(m)
             elif msg[0] == "exchange" and msg[1].isnumeric():
                 m = await self.get_currencies(int(msg[1]))
-                await self.send_to_clients(f"<b>Exchange rate:</b>: {m}")
+                await self.send_to_clients(f"Exchange rate:: \n{m}")
             else:
-                await self.send_to_clients(f"<b>{ws.name}</b>: {message}")
+                await self.send_to_clients(f"{ws.name}: {message}")
 
     async def get_currencies(self, days=2):
         if days > 10:
@@ -60,7 +60,7 @@ class SocketServer:
                 dt = date.today() - timedelta(days=day)
                 data = await pb_api_getter(get_date=dt.strftime("%d.%m.%Y"))
                 result.append(data)
-        return json.dumps(result)
+        return json.dumps(result, indent=2)
 
 
 async def run_socket():
