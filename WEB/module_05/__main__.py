@@ -4,7 +4,7 @@ import asyncio
 import websockets
 from aiohttp import web
 from webserver.aiowebserver import aiohttp_main
-from sockserver import SocketServer
+from sockserver.sockserver import SocketServer
 
 
 async def main_sock():
