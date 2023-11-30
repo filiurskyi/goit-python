@@ -56,7 +56,7 @@ if __name__ == "__main__":
     )
     for _ in range(40):
         cur.execute(
-            f"INSERT INTO students (stud_f_name, stud_l_name) VALUES ('{fake.first_name()}', '{fake.last_name()}')"
+            f"INSERT INTO students (stud_f_name, stud_l_name, stud_group) VALUES ('{fake.first_name()}', '{fake.last_name()}', {randint(1, 3)})"
         )
     connection.commit()
 
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     )
     for _ in range(10):
         cur.execute(
-            f"INSERT INTO teachers (teacher_f_name, teacher_l_name, teacher_class) VALUES ('{fake.first_name()}', '{fake.last_name()}', '{randint(0, len(classes_names))}')"
+            f"INSERT INTO teachers (teacher_f_name, teacher_l_name, teacher_class) VALUES ('{fake.first_name()}', '{fake.last_name()}', '{randint(1, len(classes_names)+1)}')"
         )
     connection.commit()
 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     students_id_list = cur.execute("SELECT id FROM students;").fetchall()
     for student_id in students_id_list:
         for _ in range(randint(10, 20)):
-            query = f"INSERT INTO stud_grades (stud_id, stud_grade, grade_date, grade_on_class) VALUES ({student_id[0]}, '{grades_names[randint(0, len(grades_names)-1)]}', '{fake.date_between(start_date=faker_start_date, end_date=faker_end_date)}','{randint(1, len(classes_names))}');"
+            query = f"INSERT INTO stud_grades (stud_id, stud_grade, grade_date, grade_on_class) VALUES ({student_id[0]}, '{grades_names[randint(0, len(grades_names)-1)]}', '{fake.date_between(start_date=faker_start_date, end_date=faker_end_date)}','{randint(1, len(classes_names)+1)}');"
             cur.execute(query)
 
     connection.commit()
