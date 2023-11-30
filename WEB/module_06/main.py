@@ -84,7 +84,6 @@ if __name__ == "__main__":
         "Programming",
         "Philosopy",
         "Biology",
-        "Chemistry",
     ]
     grades_names = [
         "5",
