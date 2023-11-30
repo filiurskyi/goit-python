@@ -5,42 +5,12 @@ from sqlite3 import Connection, Cursor
 
 from faker import Faker
 
-if __name__ == "__main__":
-    classes_names = [
-        "Astronomy",
-        "Physics",
-        "Maths",
-        "Computer Science",
-        "Programming",
-        "Philosopy",
-        "Biology",
-        "Chemistry",
-    ]
-    grades_names = [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-    ]
 
+def db_filler(cur):
     faker_start_date = datetime.strptime("2022-01-01", "%Y-%m-%d")
     faker_end_date = datetime.strptime("2023-01-01", "%Y-%m-%d")
 
     fake = Faker()
-
-    try:
-        os.remove("db.sqlite3")
-        print("old file deleted")
-    except FileNotFoundError:
-        print("old file not found")
-    except PermissionError:
-        print("Appending to old DB")
-
-    database = "db.sqlite3"
-    connection = Connection(database)
-    cur = Cursor(connection)
 
     cur.execute(
         "CREATE TABLE IF NOT EXISTS stud_groups(id INTEGER PRIMARY KEY, group_name VARCHAR(100));"
@@ -86,5 +56,56 @@ if __name__ == "__main__":
             cur.execute(query)
 
     connection.commit()
+
+
+def write_empty_sql_files():
+    for i in range(1, 11):
+        with open(f"query_{i}.sql" ,"w") as f:
+            f.write(f"--query{i}.sql\nSELECT * FROM students")
+
+
+def rewrite_db():
+    try:
+        os.remove("db.sqlite3")
+        print("old file deleted")
+        db_filler(cursor)
+    except FileNotFoundError:
+        print("old file not found")
+    except PermissionError:
+        print("Perssion Error. Using old DB")
+
+
+if __name__ == "__main__":
+    classes_names = [
+        "Astronomy",
+        "Physics",
+        "Maths",
+        "Computer Science",
+        "Programming",
+        "Philosopy",
+        "Biology",
+        "Chemistry",
+    ]
+    grades_names = [
+        "5",
+        "4",
+        "3",
+        "2",
+        "1",
+    ]
+
+
+    database = "db.sqlite3"
+    connection = Connection(database)
+    cursor = Cursor(connection)
+    # db_filler(cursor)
+
+    for i in range(1, 11):
+        with open(f"query_{i}.sql" ,"r") as f:
+            query = f.read()
+            print(query)
+            print(cursor.execute(query).fetchall())
+
+
 
     connection.close()
