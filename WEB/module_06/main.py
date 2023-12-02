@@ -60,7 +60,7 @@ def db_filler(cur):
 
 def write_empty_sql_files():
     for i in range(1, 11):
-        with open(f"query_{i}.sql" ,"w") as f:
+        with open(f"query_{i}.sql", "w") as f:
             f.write(f"--query{i}.sql\nSELECT * FROM students")
 
 
@@ -93,18 +93,15 @@ if __name__ == "__main__":
         "1",
     ]
 
-
     database = "db.sqlite3"
     connection = Connection(database)
     cursor = Cursor(connection)
     # db_filler(cursor)
 
     for i in range(1, 11):
-        with open(f"query_{i}.sql" ,"r") as f:
+        with open(f"query_{i}.sql", "r") as f:
             query = f.read()
             print(query)
             print(cursor.execute(query).fetchall())
-
-
 
     connection.close()
