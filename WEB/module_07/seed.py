@@ -7,18 +7,14 @@ from sqlalchemy.orm import sessionmaker
 
 from model import Base, Classes, Grades, Groups, Students, Teachers
 
+DB_URI = "postgresql+psycopg2://postgres:Gh43he5dgfuJKGKhrh45865s845h@localhost/module07"
+
 fake = Faker("en")
 # engine = create_engine('sqlite:///mydatabase.db', echo=True)
-engine = create_engine(
-    "postgresql+psycopg2://postgres:Gh43he5dgfuJKGKhrh45865s845h@localhost/module07",
-    echo=True,
-)
+engine = create_engine(DB_URI,echo=True,)
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-
-Base.metadata.create_all(engine)
-Base.metadata.bind = engine
 
 CLASSES_NAMES = [
     "Astronomy",
@@ -38,9 +34,7 @@ def generate_students(amount):
         grps = session.query(Groups.id).all()
         print("-------------------", grps)
         new_student = Students(
-            f_name=fake.first_name(),
-            l_name=fake.last_name(),
-            stud_group=grps
+            f_name=fake.first_name(), l_name=fake.last_name(), stud_group=grps
         )
         session.add(new_student)
         session.commit()
@@ -96,4 +90,3 @@ if __name__ == "__main__":
     generate_students(50)
     generate_teachers(10)
     generate_grades(10)
-
