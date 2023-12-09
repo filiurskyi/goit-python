@@ -1,8 +1,9 @@
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
-from model import Base
+
 from alembic import context
+from model import Base
 from seed import DB_URI
 
 # this is the Alembic Config object, which provides
@@ -26,6 +27,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 config.set_main_option("sqlalchemy.url", DB_URI)
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

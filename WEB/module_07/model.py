@@ -1,42 +1,42 @@
-from sqlalchemy import Column, ForeignKey, Integer, SmallInteger, String, DateTime
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, SmallInteger, String
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
 
-class Students(Base):
+class Student(Base):
     __tablename__ = "students"
-    id = Column(Integer, primary_key=True)
+    pk = Column(Integer, primary_key=True)
     f_name = Column(String(250), nullable=False)
     l_name = Column(String(250), nullable=False)
-    stud_group = Column(SmallInteger, ForeignKey("groups.id"), nullable=False)
+    stud_group = Column(SmallInteger, ForeignKey("groups.pk"), nullable=False)
 
 
-class Teachers(Base):
+class Teacher(Base):
     __tablename__ = "teachers"
-    id = Column(Integer, primary_key=True)
+    pk = Column(Integer, primary_key=True)
     f_name = Column(String(250), nullable=False)
     l_name = Column(String(250), nullable=False)
-    classes = relationship("Classes")
+    subject = Column(SmallInteger, ForeignKey("subjects.pk"))
 
 
-class Classes(Base):
-    __tablename__ = "classes"
-    id = Column(Integer, primary_key=True)
+class Subject(Base):
+    __tablename__ = "subjects"
+    pk = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
-    teachers = Column(SmallInteger, ForeignKey("teachers.id"))
 
 
-class Groups(Base):
+class Group(Base):
     __tablename__ = "groups"
-    id = Column(Integer, primary_key=True)
+    pk = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
 
 
-class Grades(Base):
+class Grade(Base):
     __tablename__ = "grades"
-    id = Column(Integer, primary_key=True)
+    pk = Column(Integer, primary_key=True)
     grade = Column(Integer)
-    class_id = Column(SmallInteger, ForeignKey("classes.id"))
-    teacher_id = Column(SmallInteger, ForeignKey("teachers.id"))
+    student_pk = Column(SmallInteger, ForeignKey("students.pk"))
+    subject_pk = Column(SmallInteger, ForeignKey("subjects.pk"))
+    teacher_pk = Column(SmallInteger, ForeignKey("teachers.pk"))
     date = Column(DateTime)

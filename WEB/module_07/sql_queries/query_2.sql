@@ -7,6 +7,4 @@ FROM (
     LEFT JOIN students AS s ON gd.student_pk = s.pk
     GROUP BY gd.student_pk, gd.subject_pk, s.f_name, s.l_name
 ) AS sq
-GROUP BY sq.student_pk, sq.subject_pk, sq.f_name, sq.l_name
-ORDER BY max_avg_grade DESC
-LIMIT 5;
+GROUP BY sq.student_pk, sq.subject_pk, sq.f_name, sq.l_name;
