@@ -1,9 +1,10 @@
+import json
+from pathlib import Path
 from pprint import pprint
 from sys import argv
-from connect import db
-from pathlib import Path
-import json
 
+import connect
+from model import Author, Quote, Tag
 
 # db_a = client.authors
 # db_q = client.quotes
@@ -34,14 +35,31 @@ def search():
                 print(f"Unknown {command=}")
 
 
+def model_mapper(data: dict) -> None:
+    if data.get("fullname", None) is not None:
+        # handle as importing authors
+        author_mapper(data)
+    elif data.get("author", None) is not None:
+        # handle as importing quotes
+        quote_mapper(data)
+        pass
+
+
+def author_mapper(data: dict) -> None:
+    pass
+
+
+def quote_mapper(data: dict) -> None:
+    ...
+
+
 def load_json(filename) -> None:
     try:
         path = Path(filename)
         with open(path, "r") as f:
             text = json.loads(f.read())
             for item in text:
-                db_a = db.authors
-                db_a.insert_one(item)
+                pass
                 # print("=" * 80)
                 # pprint(item)
     except FileNotFoundError as e:

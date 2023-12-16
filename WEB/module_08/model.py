@@ -1,17 +1,29 @@
-from os import getenv
+from datetime import datetime
 
-import mongoengine as me
-from dotenv import load_dotenv
+from mongoengine import Document, EmbeddedDocument, ReferenceField
+from mongoengine.fields import (BooleanField, DateTimeField,
+                                EmbeddedDocumentField, ListField, StringField)
 
-load_dotenv()
 
-DB_USER = getenv("DB_USER")
-DB_PW = getenv("DB_PW")
-DATABASE = getenv("DATABASE")
+class Author(Document):
+    fullname = StringField(required=True)
+    born_date = StringField()
+    born_location = StringField()
+    description = StringField()
+    date_modified = DateTimeField(default=datetime.utcnow)
+    date_created = DateTimeField(default=datetime.utcnow)
 
-URI = f"mongodb+srv://{DB_USER}:{DB_PW}@cluster0.oaihoro.mongodb.net/{DATABASE}?retryWrites=true&w=majority"
 
-me.connect(host=URI)
+class Tag(EmbeddedDocument):
+    tag = StringField()
+
+
+class Quote(Document):
+    author = ReferenceField(Author)
+    tags = ListField(EmbeddedDocumentField(Tag))
+    quote = StringField(required=True)
+    date_modified = DateTimeField(default=datetime.utcnow)
+    date_created = DateTimeField(default=datetime.utcnow)
 
 
 # person_dict = {
