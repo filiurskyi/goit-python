@@ -14,13 +14,9 @@ class Author(Document):
     date_created = DateTimeField(default=datetime.utcnow)
 
 
-class Tag(EmbeddedDocument):
-    tag = StringField()
-
-
 class Quote(Document):
     author = ReferenceField(Author)
-    tags = ListField(EmbeddedDocumentField(Tag))
+    tags = ListField(StringField())
     quote = StringField(required=True)
     date_modified = DateTimeField(default=datetime.utcnow)
     date_created = DateTimeField(default=datetime.utcnow)
