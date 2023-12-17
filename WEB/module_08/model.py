@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from mongoengine import Document, EmbeddedDocument, ReferenceField
+from mongoengine import CASCADE, Document, EmbeddedDocument, ReferenceField
 from mongoengine.fields import (BooleanField, DateTimeField,
                                 EmbeddedDocumentField, ListField, StringField)
 
@@ -15,7 +15,7 @@ class Author(Document):
 
 
 class Quote(Document):
-    author = ReferenceField(Author)
+    author = ReferenceField(Author, reverse_delete_rule=CASCADE)
     tags = ListField(StringField())
     quote = StringField(required=True)
     date_modified = DateTimeField(default=datetime.utcnow)

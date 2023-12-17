@@ -3,7 +3,7 @@ from pathlib import Path
 from pprint import pprint
 from sys import argv
 
-import connect
+import connect # must be imported in order to connect!!
 from model import Author, Quote
 
 # db_a = client.authors
@@ -58,17 +58,15 @@ def author_mapper(data: dict) -> None:
 
 def quote_mapper(data: dict) -> None:
     tags = []
-    author = db_authors_query(data.get("fullname"))
+    author_name = data.get("author")
+    print("adding quote for author ", author_name)
+    author = db_authors_query(author_name)
     for item in data.get("tags"):
         tags.append(item)
-    Quote(
-        author=author,
-        tags=tags,
-        quote=data.get("quote")
-    ).save()
+    Quote(author=author.id, tags=tags, quote=data.get("quote")).save()
 
 
-def db_authors_query(name):
+def db_authors_query(name: str) -> Author:
     author = Author.objects(fullname=name).first()
     return author
 
@@ -76,7 +74,7 @@ def db_authors_query(name):
 def load_json(filename) -> None:
     try:
         path = Path(filename)
-        with open(path, "r", encoding='utf-8') as f:
+        with open(path, "r", encoding="utf-8") as f:
             text = json.loads(f.read())
             for item in text:
                 print("adding new item ..")
@@ -100,7 +98,7 @@ def main() -> None:
             case "help":
                 print(help_message)
             case "test":
-                print(db_authors_query(1, 1))
+                print(db_authors_query(arg[1]).to_mongo().to_dict())
             case _:
                 print("unknown command")
                 print(help_message)
