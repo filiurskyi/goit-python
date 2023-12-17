@@ -24,6 +24,7 @@ def search():
         match command[0]:
             case "name":
                 print(f"name {command=}")
+                result = db_lookup_name(command[1])
             case "tag":
                 print(f"tag {command=}")
             case "tags":
@@ -70,6 +71,9 @@ def db_authors_query(name: str) -> Author:
     author = Author.objects(fullname=name).first()
     return author
 
+def db_lookup_name(name: str) -> list(Quote):
+    quotes = Quote.objects(fullname=name).all()
+    return quotes
 
 def load_json(filename) -> None:
     try:
