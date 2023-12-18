@@ -170,7 +170,7 @@ def load_json(filename) -> None:
 
 
 def main() -> None:
-    connect
+    connect # noqa
     arg = argv[1:]
     if len(arg) >= 1:
         match arg[0]:

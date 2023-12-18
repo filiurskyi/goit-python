@@ -3,7 +3,7 @@ from time import sleep
 
 import pika
 from bson import ObjectId
-
+from connect import connect
 from model_contact import Contact
 
 
@@ -25,6 +25,7 @@ def simulate_send_email(recipient: ObjectId) -> bool:
 
 
 def main():
+    connect # noqa
     credentials = pika.PlainCredentials("guest", "guest")
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(host="localhost", port=5672, credentials=credentials)
