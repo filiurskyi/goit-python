@@ -1,4 +1,5 @@
 import os
+import pickle
 import redis
 
 REDIS_HOST = os.getenv("REDIS_HOST")
@@ -7,14 +8,23 @@ REDIS_USER = os.getenv("REDIS_USER")
 REDIS_PW = os.getenv("REDIS_PW")
 REDIS_DB = os.getenv("REDIS_DB")
 
-redis_connector = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, username=REDIS_USER, password=REDIS_PW, db=REDIS_DB)
+redis_connector = redis.Redis(
+    host=REDIS_HOST,
+    port=REDIS_PORT,
+    username=REDIS_USER,
+    password=REDIS_PW,
+    db=REDIS_DB,
+)
 
 
-def redis_setter(key: str, val: str, connection: redis.Redis):
-    connection.set(key, val)
+def redis_set(key: str, val, connection=redis_connector) -> None:
+    connection.set(key, pickle.dumps(val), ex=900)
     print(f"wrote to db {key=}, {val=}")
 
 
-def redis_getter(key: str, connection: redis.Redis):
+def redis_get(key: str, connection=redis_connector):
     val = connection.get(key)
-    return f"got from db {key=}, {val=}"
+    if val:
+        return pickle.loads(val)
+    else:
+        return

@@ -1,8 +1,13 @@
 from datetime import datetime
 
 from mongoengine import CASCADE, Document, EmbeddedDocument, ReferenceField
-from mongoengine.fields import (BooleanField, DateTimeField,
-                                EmbeddedDocumentField, ListField, StringField)
+from mongoengine.fields import (
+    BooleanField,
+    DateTimeField,
+    EmbeddedDocumentField,
+    ListField,
+    StringField,
+)
 
 
 class Contact(Document):

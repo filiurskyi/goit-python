@@ -3,16 +3,13 @@ from pathlib import Path
 from pprint import pprint
 from sys import argv
 
-import connect # must be imported in order to connect!!
+from connect_redis import redis_set, redis_get
 from model import Author, Quote
 
-# db_a = client.authors
-# db_q = client.quotes
-
 help_message = """Usage:\n
-name: Steven Martin      - find all quotes by author
+name:Steve Martin      - find all quotes by author
 tag:life                 - find by one tag
-tags:life, live          - find by multiple tags
+tags:life,live          - find by multiple tags
 exit                     - exit CLI"""
 
 
@@ -23,14 +20,22 @@ def search():
         command = input(">> ").split(":")
         match command[0]:
             case "name":
-                print(f"name {command=}")
                 result = db_lookup_name(command[1])
+                print(f"name {command=}, {result=}")
+                for quote in result:
+                    pprint(f"Found quote\n{quote.to_mongo().to_dict()}")
             case "tag":
-                print(f"tag {command=}")
+                result = db_lookup_tag(command[1])
+                # print(f"name {command=}, {result=}")
+                for quote in result:
+                    pprint(f"Found quote\n{quote.to_mongo().to_dict()}")
             case "tags":
-                print(f"tags {command=}")
+                result = db_lookup_tags(command[1].strip().split(","))
+                # print(f"name {command=}, {result=}")
+                for quote in result:
+                    pprint(f"Found quote\n{quote.to_mongo().to_dict()}")
             case "exit":
-                print(f"exit {command=}")
+                print(f"exiting...")
                 break
             case _:
                 print(f"Unknown {command=}")
@@ -71,9 +76,46 @@ def db_authors_query(name: str) -> Author:
     author = Author.objects(fullname=name).first()
     return author
 
-def db_lookup_name(name: str) -> list(Quote):
-    quotes = Quote.objects(fullname=name).all()
-    return quotes
+
+def db_lookup_name(name: str) -> list[Quote]:
+    cached_query = redis_get(name)
+    print(f"{cached_query=}")
+    if cached_query is not None:
+        # print("getting cached")
+        return cached_query
+    else:
+        # print("getting uncached")
+        author = db_authors_query(name)
+        quotes = Quote.objects(author=author).all()
+        redis_set(name, quotes)
+        return quotes
+
+
+def db_lookup_tag(tag: str) -> list[Quote]:
+    cached_query = redis_get(tag)
+    print(f"{cached_query=}")
+    if cached_query is not None:
+        # print("getting cached")
+        return cached_query
+    else:
+        # print("getting uncached")
+        quotes = Quote.objects(tags=tag)
+        redis_set(tag, quotes)
+        return quotes
+
+
+def db_lookup_tags(tags: list[str]) -> list[Quote]:
+    cached_query = redis_get(str(tags))
+    print(f"{cached_query=}")
+    if cached_query is not None:
+        # print("getting cached")
+        return cached_query
+    else:
+        # print("getting uncached")
+        quotes = Quote.objects(tags__all=tags)
+        redis_set(str(tags), quotes)
+        return quotes
+
 
 def load_json(filename) -> None:
     try:
@@ -102,7 +144,7 @@ def main() -> None:
             case "help":
                 print(help_message)
             case "test":
-                print(db_authors_query(arg[1]).to_mongo().to_dict())
+                print(db_authors_query("Steve Martin"))
             case _:
                 print("unknown command")
                 print(help_message)

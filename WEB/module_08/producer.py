@@ -1,8 +1,9 @@
 import os
 
 from faker import Faker
+
 import connect
-from connect_redis import redis_getter, redis_setter, redis_connector
+from connect_redis import redis_get, redis_set
 from model_contact import Contact
 
 
@@ -20,6 +21,6 @@ def seed_contact(contact_number):
 if __name__ == "__main__":
     seed_contact(int(input("Enter int number of contacts to seed: ")))
 
-    redis_setter("first_key", "super value", redis_connector)
+    redis_set("first_key", "super value")
 
-    print(redis_getter("first_key", redis_connector))
+    print(redis_get("first_key"))
