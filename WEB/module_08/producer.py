@@ -1,26 +1,22 @@
-import os
+import pika
 
-from faker import Faker
-
-import connect
-from connect_redis import redis_get, redis_set
-from model_contact import Contact
+from main import seed_contact
 
 
-def seed_contact(contact_number):
-    fake = Faker()
-    for _ in range(contact_number):
-        new_contact = Contact(
-            first_name=fake.first_name(),
-            last_name=fake.last_name(),
-            personal_email=fake.email(),
-        )
-        new_contact.save()
+def main():
+    credentials = pika.PlainCredentials("guest", "guest")
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(host="localhost", port=5672, credentials=credentials)
+    )
+    channel = connection.channel()
+
+    channel.queue_declare(queue="queue")
+
+    contacts = seed_contact(int(input("Enter contacts count to seed: ")))
+    for contact in contacts:
+        channel.basic_publish(exchange="", routing_key="queue", body=contact.binary)
+    connection.close()
 
 
 if __name__ == "__main__":
-    seed_contact(int(input("Enter int number of contacts to seed: ")))
-
-    redis_set("first_key", "super value")
-
-    print(redis_get("first_key"))
+    main()

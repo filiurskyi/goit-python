@@ -3,7 +3,6 @@ from os import getenv
 from dotenv import load_dotenv
 from mongoengine import connect
 
-
 load_dotenv()
 DB_USER = getenv("DB_USER")
 DB_PW = getenv("DB_PW")

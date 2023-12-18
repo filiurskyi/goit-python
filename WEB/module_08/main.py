@@ -3,8 +3,14 @@ from pathlib import Path
 from pprint import pprint
 from sys import argv
 
-from connect_redis import redis_set, redis_get
+from bson import ObjectId
+from faker import Faker
+from mongoengine import Q
+
+from connect import connect
+from connect_redis import redis_get, redis_set
 from model import Author, Quote
+from model_contact import Contact
 
 help_message = """Usage:\n
 name:Steve Martin      - find all quotes by author
@@ -18,22 +24,23 @@ def search():
     print(help_message)
     while not_exit:
         command = input(">> ").split(":")
+        # print("----command-----", command)
         match command[0]:
             case "name":
                 result = db_lookup_name(command[1])
-                print(f"name {command=}, {result=}")
+                # print(f"name {command=}, {result=}")
                 for quote in result:
-                    pprint(f"Found quote\n{quote.to_mongo().to_dict()}")
+                    pprint(quote)
             case "tag":
                 result = db_lookup_tag(command[1])
                 # print(f"name {command=}, {result=}")
                 for quote in result:
-                    pprint(f"Found quote\n{quote.to_mongo().to_dict()}")
+                    pprint(quote)
             case "tags":
                 result = db_lookup_tags(command[1].strip().split(","))
-                # print(f"name {command=}, {result=}")
+                print(f"name {command=}, {result=}")
                 for quote in result:
-                    pprint(f"Found quote\n{quote.to_mongo().to_dict()}")
+                    pprint(quote)
             case "exit":
                 print(f"exiting...")
                 break
@@ -73,7 +80,7 @@ def quote_mapper(data: dict) -> None:
 
 
 def db_authors_query(name: str) -> Author:
-    author = Author.objects(fullname=name).first()
+    author = Author.objects(fullname__contains=name).first()
     return author
 
 
@@ -81,40 +88,69 @@ def db_lookup_name(name: str) -> list[Quote]:
     cached_query = redis_get(name)
     print(f"{cached_query=}")
     if cached_query is not None:
-        # print("getting cached")
+        print("getting cached")
         return cached_query
     else:
-        # print("getting uncached")
+        print("getting uncached")
         author = db_authors_query(name)
         quotes = Quote.objects(author=author).all()
-        redis_set(name, quotes)
-        return quotes
+        result = []
+        for quote in quotes:
+            result.append(quote.to_mongo().to_dict())
+        redis_set(name, result)
+        return result
 
 
 def db_lookup_tag(tag: str) -> list[Quote]:
     cached_query = redis_get(tag)
     print(f"{cached_query=}")
     if cached_query is not None:
-        # print("getting cached")
+        print("getting cached")
         return cached_query
     else:
-        # print("getting uncached")
-        quotes = Quote.objects(tags=tag)
-        redis_set(tag, quotes)
-        return quotes
+        print("getting uncached")
+        quotes = Quote.objects(tags__contains=tag)
+        result = []
+        for quote in quotes:
+            result.append(quote.to_mongo().to_dict())
+        redis_set(tag, result)
+        return result
 
 
 def db_lookup_tags(tags: list[str]) -> list[Quote]:
-    cached_query = redis_get(str(tags))
+    cached_query = redis_get(",".join(tags))
     print(f"{cached_query=}")
     if cached_query is not None:
-        # print("getting cached")
+        print("getting cached")
         return cached_query
     else:
-        # print("getting uncached")
-        quotes = Quote.objects(tags__all=tags)
-        redis_set(str(tags), quotes)
-        return quotes
+        print("getting uncached")
+        queries = [Q(tags__contains=tag) for tag in tags]
+        combined_query = Q()
+        for q in queries:
+            combined_query &= q
+        quotes = Quote.objects(combined_query)
+
+        result = []
+        for quote in quotes:
+            result.append(quote.to_mongo().to_dict())
+        redis_set(",".join(tags), result)
+        return result
+
+
+def seed_contact(contacts_count) -> list[ObjectId]:
+    fake = Faker()
+    contacts_ids = []
+    for _ in range(contacts_count):
+        new_contact = Contact(
+            first_name=fake.first_name(),
+            last_name=fake.last_name(),
+            personal_email=fake.email(),
+        )
+        new_contact.save()
+        contacts_ids.append(new_contact.id)
+        # print(f"{contacts_ids=}")
+    return contacts_ids
 
 
 def load_json(filename) -> None:
@@ -134,6 +170,7 @@ def load_json(filename) -> None:
 
 
 def main() -> None:
+    connect
     arg = argv[1:]
     if len(arg) >= 1:
         match arg[0]:
@@ -145,6 +182,8 @@ def main() -> None:
                 print(help_message)
             case "test":
                 print(db_authors_query("Steve Martin"))
+            case "seed":
+                seed_contact(int(input("Enter int number of contacts to seed: ")))
             case _:
                 print("unknown command")
                 print(help_message)

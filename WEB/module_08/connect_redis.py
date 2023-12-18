@@ -1,5 +1,6 @@
 import os
 import pickle
+
 import redis
 
 REDIS_HOST = os.getenv("REDIS_HOST")
@@ -19,7 +20,7 @@ redis_connector = redis.Redis(
 
 def redis_set(key: str, val, connection=redis_connector) -> None:
     connection.set(key, pickle.dumps(val), ex=900)
-    print(f"wrote to db {key=}, {val=}")
+    # print(f"wrote to db {key=}, {val=}")
 
 
 def redis_get(key: str, connection=redis_connector):
