@@ -25,7 +25,7 @@ def simulate_send_email(recipient: ObjectId) -> bool:
 
 
 def main():
-    connect # noqa
+    connect  # noqa
     credentials = pika.PlainCredentials("guest", "guest")
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(host="localhost", port=5672, credentials=credentials)

@@ -2,10 +2,9 @@ import datetime
 from random import choice, randint
 
 from faker import Faker
+from model import Base, Grade, Group, Student, Subject, Teacher
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
-from model import Base, Grade, Group, Student, Subject, Teacher
 
 DB_URI = (
     "postgresql+psycopg2://postgres:Gh43he5dgfuJKGKhrh45865s845h@localhost/module07"

@@ -4,13 +4,12 @@ from pprint import pprint
 from sys import argv
 
 from bson import ObjectId
-from faker import Faker
-from mongoengine import Q
-
 from connect import connect
 from connect_redis import redis_get, redis_set
+from faker import Faker
 from model import Author, Quote
 from model_contact import Contact
+from mongoengine import Q
 
 help_message = """Usage:\n
 name:Steve Martin      - find all quotes by author
@@ -171,7 +170,7 @@ def load_json(filename) -> None:
 
 
 def main() -> None:
-    connect # noqa
+    connect  # noqa
     arg = argv[1:]
     if len(arg) >= 1:
         match arg[0]:

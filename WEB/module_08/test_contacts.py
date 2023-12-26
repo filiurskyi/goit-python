@@ -2,9 +2,8 @@ from datetime import datetime
 from pprint import pprint
 from random import choice, randint
 
-from faker import Faker
-
 from connect import client
+from faker import Faker
 
 db = client.book  # book is a database
 

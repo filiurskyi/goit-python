@@ -1,5 +1,4 @@
 import pika
-
 from main import seed_contact
 
 

@@ -1,18 +1,21 @@
-from sqlalchemy import func, select, desc
+from pprint import pprint
 
 from model import Grade, Group, Student, Subject, Teacher
 from seed import session
-
-from pprint import pprint
+from sqlalchemy import desc, func, select
 
 
 def select_1():
     print("=============1================")
     # Знайти 5 студентів із найбільшим середнім балом з усіх предметів.
-    average_grade = func.avg(Grade.grade).label('average_grade')
+    average_grade = func.avg(Grade.grade).label("average_grade")
 
     query = session.execute(
-        select(Student.f_name, Student.l_name, average_grade,)
+        select(
+            Student.f_name,
+            Student.l_name,
+            average_grade,
+        )
         .select_from(Grade)
         .join(Student)
         .join(Subject)
@@ -26,10 +29,15 @@ def select_1():
 def select_2(subject_id: int):
     print("=============2================")
     # Знайти студента із найвищим середнім балом з певного предмета.
-    average_grade = func.avg(Grade.grade).label('average_grade')
+    average_grade = func.avg(Grade.grade).label("average_grade")
 
     query = session.execute(
-        select(Student.f_name, Student.l_name, Subject.name, average_grade,)
+        select(
+            Student.f_name,
+            Student.l_name,
+            Subject.name,
+            average_grade,
+        )
         .select_from(Grade)
         .join(Student)
         .join(Subject)
@@ -67,9 +75,7 @@ def select_3(subject_pk: int):
 def select_4():
     print("============4=================")
     # Знайти середній бал на потоці (по всій таблиці оцінок).
-    query = session.execute(
-        select(func.avg(Grade.grade))
-    ).all()
+    query = session.execute(select(func.avg(Grade.grade))).all()
     pprint(query)
 
 
@@ -77,8 +83,7 @@ def select_5():
     print("=============5================")
     # Знайти які курси читає певний викладач.
     query = session.execute(
-        select(Teacher.f_name, Teacher.l_name, Subject.name)
-        .join(Subject)
+        select(Teacher.f_name, Teacher.l_name, Subject.name).join(Subject)
     ).all()
     pprint(query)
 
@@ -137,12 +142,16 @@ def select_10(teacher_id: int, student_id: int):
     print("==============10===============")
     # Список курсів, які певному студенту читає певний викладач.
     query = session.execute(
-        select(Student.f_name, Student.l_name, Teacher.f_name, Teacher.l_name, Subject.name)
+        select(
+            Student.f_name, Student.l_name, Teacher.f_name, Teacher.l_name, Subject.name
+        )
         .select_from(Teacher)
         .join(Subject)
         .where(Teacher.pk == teacher_id)
         .where(Student.pk == student_id)
-        .group_by(Subject.name, Student.f_name, Student.l_name, Teacher.f_name, Teacher.l_name)
+        .group_by(
+            Subject.name, Student.f_name, Student.l_name, Teacher.f_name, Teacher.l_name
+        )
     ).all()
     pprint(query)
 
@@ -158,4 +167,3 @@ if __name__ == "__main__":
     # select_8(1)
     # select_9(1)
     # select_10(4 ,1)
-

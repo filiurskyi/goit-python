@@ -1,14 +1,12 @@
 import asyncio
 import json
 import logging
+from datetime import date, timedelta
 
 import names
 import websockets
-from websockets import WebSocketProtocolError, WebSocketServerProtocol
-
 from app import pb_api_getter
-from datetime import date, timedelta
-
+from websockets import WebSocketProtocolError, WebSocketServerProtocol
 
 logging.basicConfig(level=logging.INFO)
 

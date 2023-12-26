@@ -3,9 +3,7 @@ from typing import Union
 
 import requests
 from bs4 import BeautifulSoup
-
 from con_redis import redis_get, redis_set
-
 
 # from urllib.parse import urljoin, urlparse
 
@@ -39,7 +37,7 @@ class AuthorCard:
             "fullname": self.name,
             "born_date": self.born_date,
             "born_location": self.born_location,
-            "description": self.description
+            "description": self.description,
         }
 
 
@@ -124,8 +122,6 @@ def get_quote_urls(base, url_list=["/"]):
                 return [*result, *get_quote_urls(base, url_list=[link])]
         else:
             return result
-
-
 
 
 if __name__ == "__main__":

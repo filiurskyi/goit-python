@@ -80,7 +80,9 @@ async def pb_api_getter(get_date=date.today().strftime("%d.%m.%Y")):
             currencies_aggregator = CurrenciesAggregator(resp_json)
             out = {}
             for currency in currencies_interest:
-                out.update({get_date: currencies_aggregator.get_sale_purchase(currency)})
+                out.update(
+                    {get_date: currencies_aggregator.get_sale_purchase(currency)}
+                )
             return out
 
 
