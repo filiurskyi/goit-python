@@ -76,7 +76,8 @@ def quote_mapper(data: dict) -> None:
     author = db_authors_query(author_name)
     for item in data.get("tags"):
         tags.append(item)
-    Quote(author=author.id, tags=tags, quote=data.get("quote")).save()
+    if author:
+        Quote(author=author.id, tags=tags, quote=data.get("quote")).save()
 
 
 def db_authors_query(name: str) -> Author:

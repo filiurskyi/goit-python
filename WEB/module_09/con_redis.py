@@ -2,13 +2,14 @@ import os
 import pickle
 
 import redis
+from dotenv import load_dotenv
 
+load_dotenv()
 REDIS_HOST = os.getenv("REDIS_HOST")
 REDIS_PORT = os.getenv("REDIS_PORT")
 REDIS_USER = os.getenv("REDIS_USER")
 REDIS_PW = os.getenv("REDIS_PW")
 REDIS_DB = os.getenv("REDIS_DB")
-
 
 redis_connector = redis.Redis(
     host=REDIS_HOST,
@@ -30,3 +31,7 @@ def redis_get(key: str, connection=redis_connector):
         return pickle.loads(val)
     else:
         return
+
+
+if __name__ == "__main__":
+    print(REDIS_PORT, REDIS_USER, REDIS_DB, REDIS_HOST, REDIS_PW)
