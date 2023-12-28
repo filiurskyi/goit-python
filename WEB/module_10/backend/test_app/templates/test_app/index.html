@@ -1,5 +1,37 @@
 {% extends "test_app/base.html" %}
 
 {% block content %}
-<p>{{ msg }}</p>
+<div class="flex items-center justify-center pt-10 pb-3">
+    <h1 class="text-5xl mb-5">{{ msg }}</h1>
+</div>
+
+<div class="grid grid-cols-1 gap-4">
+    <div class="flex items-center justify-center">
+        <a href="#"
+           class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology
+                acquisitions 2021</h5>
+            <p class="font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology
+                acquisitions
+                of 2021 so far, in reverse chronological order.</p>
+        </a>
+    </div>
+</div>
+
+
+<div class="flex items-center justify-center pt-10 pb-3">
+    <div class="flex">
+        <!-- Previous Button -->
+        <a href="#"
+           class="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            Previous
+        </a>
+        <!-- Next Button -->
+        <a href="#"
+           class="flex items-center justify-center px-3 h-8 ms-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            Next
+        </a>
+    </div>
+</div>
+
 {% endblock %}

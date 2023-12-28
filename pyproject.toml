@@ -21,6 +21,8 @@ beautifulsoup4 = "^4.12.2"
 requests = "^2.31.0"
 scrapy = "^2.11.0"
 django = "^5.0"
+django-compressor = "^4.4"
+django-tailwind = {extras = ["reload"], version = "^3.8.0"}
 
 
 [build-system]
