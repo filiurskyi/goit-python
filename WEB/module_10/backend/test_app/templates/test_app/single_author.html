@@ -1,0 +1,12 @@
+{% extends "test_app/base.html" %}
+{% block content %}
+<div class="flex items-center justify-center pt-10 pb-3">
+    <h1 class="text-5xl mb-5">Authors</h1>
+</div>
+{{ author }}
+{{ author.fullname }}
+{{ author.born_date }}
+{{ author.born_location }}
+{{ author.description }}
+
+{% endblock %}
