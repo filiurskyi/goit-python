@@ -1,5 +1,6 @@
-from django.shortcuts import render
 from django.core.paginator import Paginator
+from django.shortcuts import render
+
 # Create your views here.
 from .models import Quote, Author
 
@@ -7,7 +8,7 @@ from .models import Quote, Author
 def index(request):
     query = Quote.objects.all()
     paginator = Paginator(query, 6)
-    page = request.GET.get('page')
+    page = request.GET.get('page')  # Get the current page number from the request's GET parameters
     quotes = paginator.get_page(page)
     return render(request, "test_app/index.html", context={"quotes": quotes})
 
