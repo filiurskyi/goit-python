@@ -4,6 +4,33 @@
 <div class="flex items-center justify-center pt-10 pb-3">
     <h1 class="text-5xl mb-5">Login</h1>
 </div>
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <div {% if message.tags %} class="alert-{{ message.tags }}" {% endif %}>{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<form action="{% url 'users:login' %}" method="post">
+    {% csrf_token %}
+    <div>
+        <label> Username:
+            {{ form.username }}
+        </label>
+    </div>
+
+    <div>
+        <label>Password:
+            {{ form.password }}
+        </label>
+    </div>
+
+    <div class="grid">
+        <button type="submit">Submit</button>
+        <button type="reset" class="secondary">Reset</button>
+    </div>
+</form>
 
 {% include "theme/pagination.html" %}
 
