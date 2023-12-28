@@ -26,7 +26,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "192.168.1.10",
-    "localhost"
+    "localhost",
+    # "*",
 ]
 
 # Application definition
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "test_app",
+    "users",
     "tailwind",
     "theme",
     "django_browser_reload",
