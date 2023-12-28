@@ -25,16 +25,14 @@
             </div>
             <div class="flex flex-wrap gap-x-2 pb-2 p-5">
                 {% for tag in quote.tags.all %}
-                <a href="{% url 'test_app:specific_tag' tagname=tag %}"
-                   class="font-normal text-gray-700 dark:text-gray-600 hover:text-blue-500">#{{ tag }}</a>
+                <a href="{% url 'test_app:specific_tag' tagname=tag %}" class="font-normal text-gray-700 dark:text-gray-600 hover:text-blue-500">#{{ tag }}</a>
                 {% endfor %}
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
-{% include "test_app/pagination.html" %}
 
-
+{% include "test_app/pagination.html "%}
 
 {% endblock %}

@@ -12,7 +12,7 @@ class Author(models.Model):
 
 
 class Tag(models.Model):
-    word = models.CharField(max_length=35)
+    word = models.CharField(max_length=35, unique=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

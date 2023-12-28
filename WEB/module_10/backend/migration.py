@@ -44,16 +44,28 @@ def author_mapper(data: dict) -> None:
 def quote_mapper(data: dict) -> None:
     tags = []
     author_name = data.get("author")
-    print("adding quote for author ", author_name)
+    print("Adding quote for author", author_name)
+
+    # Check if the author exists
     author = db_authors_query(author_name)
-    for item in data.get("tags"):
-        new_tag = Tag(word=item)
-        tags.append(new_tag)
-        new_tag.save()
+
     if author:
+        # Iterate through tags and check if they exist, create if not
+        for item in data.get("tags"):
+            existing_tag = Tag.objects.filter(word=item).first()
+
+            if existing_tag:
+                tags.append(existing_tag)
+            else:
+                new_tag = Tag(word=item)
+                new_tag.save()
+                tags.append(new_tag)
+
+        # Create the quote
         quote = Quote(author=author, quote=data.get("quote"))
         quote.save()
         quote.tags.set(tags)
+
         print("Quote added successfully.")
     else:
         print("Author not found.")
@@ -64,6 +76,10 @@ def db_authors_query(name: str) -> Author:
     return author
 
 
-if __name__ == '__main__':
+def main():
     load_json_to_db("../authors.json")
-    load_json_to_db("quotes.json.json")
+    load_json_to_db("../quotes.json")
+
+
+if __name__ == '__main__':
+    main()
