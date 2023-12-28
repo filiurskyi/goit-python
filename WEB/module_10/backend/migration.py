@@ -81,5 +81,5 @@ def main():
     load_json_to_db("../quotes.json")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

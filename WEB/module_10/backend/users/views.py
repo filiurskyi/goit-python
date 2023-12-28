@@ -1,5 +1,4 @@
-from django.shortcuts import render, redirect
-
+from django.shortcuts import redirect, render
 
 # Create your views here.
 
@@ -9,7 +8,7 @@ def register(request):
 
 
 def login(request):
-    return render(request, "users/login.html", context={"author": 'none'})
+    return render(request, "users/login.html", context={"author": "none"})
 
 
 def dashboard(request):

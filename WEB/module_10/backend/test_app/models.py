@@ -7,8 +7,8 @@ class Author(models.Model):
     born_date = models.CharField(max_length=100)
     born_location = models.CharField(max_length=100)
     description = models.TextField()
-    date_modified = models.DateTimeField('date modified', auto_now_add=True)
-    date_created = models.DateTimeField('date created', auto_now_add=True)
+    date_modified = models.DateTimeField("date modified", auto_now_add=True)
+    date_created = models.DateTimeField("date created", auto_now_add=True)
 
 
 class Tag(models.Model):
@@ -21,9 +21,7 @@ class Tag(models.Model):
 
 class Quote(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=False)
-    tags = models.ManyToManyField(Tag, related_name='quotes')
+    tags = models.ManyToManyField(Tag, related_name="quotes")
     quote = models.TextField(null=False)
-    date_modified = models.DateTimeField('date modified', auto_now_add=True)
-    date_created = models.DateTimeField('date created', auto_now_add=True)
-
-
+    date_modified = models.DateTimeField("date modified", auto_now_add=True)
+    date_created = models.DateTimeField("date created", auto_now_add=True)
