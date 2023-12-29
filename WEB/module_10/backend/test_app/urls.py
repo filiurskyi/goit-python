@@ -9,5 +9,7 @@ urlpatterns = [
     path("authors/<pk>", views.AuthorDetailView.as_view(), name="specific_author"),
     path("authors/", views.AuthorsListView.as_view(), name="all_authors"),
     path("tags/", views.TagsListView.as_view(), name="all_tags"),
-    path("tags/<str:tagname>", views.QuotesByTagListView.as_view(), name="specific_tag"),
+    path(
+        "tags/<str:tagname>", views.QuotesByTagListView.as_view(), name="specific_tag"
+    ),
 ]

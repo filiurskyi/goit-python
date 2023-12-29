@@ -1,19 +1,28 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UsernameField
+from django.contrib.auth.forms import (AuthenticationForm, UserCreationForm,
+                                       UsernameField)
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-from test_app.models import Quote, Author
+from test_app.models import Author, Quote
 
 form_style = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 
 
 class RegisterForm(UserCreationForm):
-    username = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={"class": form_style}))
+    username = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={"class": form_style}),
+    )
     password1 = forms.CharField(
-        max_length=50, required=True, widget=forms.PasswordInput(attrs={"class": form_style})
+        max_length=50,
+        required=True,
+        widget=forms.PasswordInput(attrs={"class": form_style}),
     )
     password2 = forms.CharField(
-        max_length=50, required=True, widget=forms.PasswordInput(attrs={"class": form_style})
+        max_length=50,
+        required=True,
+        widget=forms.PasswordInput(attrs={"class": form_style}),
     )
 
     class Meta:
@@ -22,16 +31,20 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
-    username = UsernameField(widget=forms.TextInput(attrs={"autofocus": True, "class": form_style}))
+    username = UsernameField(
+        widget=forms.TextInput(attrs={"autofocus": True, "class": form_style})
+    )
     password = forms.CharField(
         label=_("Password"),
         strip=False,
-        widget=forms.PasswordInput(attrs={"autocomplete": "current-password", "class": form_style}),
+        widget=forms.PasswordInput(
+            attrs={"autocomplete": "current-password", "class": form_style}
+        ),
     )
 
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ["username", "password"]
 
 
 form_field_style = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-600 dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -39,8 +52,10 @@ form_textfield_style = "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 roun
 
 
 class AddQuoteForm(forms.ModelForm):
-    author = forms.ModelChoiceField(queryset=Author.objects.all(),
-                                    widget=forms.Select(attrs={"class": form_field_style}))
+    author = forms.ModelChoiceField(
+        queryset=Author.objects.all(),
+        widget=forms.Select(attrs={"class": form_field_style}),
+    )
     quote = forms.CharField(
         required=True,
         widget=forms.Textarea(attrs={"class": form_textfield_style, "rows": 4})
@@ -53,14 +68,25 @@ class AddQuoteForm(forms.ModelForm):
 
 
 class AddAuthorForm(forms.ModelForm):
-    fullname = forms.CharField(max_length=50,
-                               required=True, widget=forms.TextInput(attrs={"class": form_field_style}))
-    born_date = forms.CharField(max_length=100, required=True,
-                                widget=forms.TextInput(attrs={"class": form_field_style}))
-    born_location = forms.CharField(max_length=100, required=True,
-                                    widget=forms.TextInput(attrs={"class": form_field_style}))
-    description = forms.CharField(required=True,
-                                  widget=forms.Textarea(attrs={"class": form_textfield_style, "rows": 4}))
+    fullname = forms.CharField(
+        max_length=50,
+        required=True,
+        widget=forms.TextInput(attrs={"class": form_field_style}),
+    )
+    born_date = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={"class": form_field_style}),
+    )
+    born_location = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={"class": form_field_style}),
+    )
+    description = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={"class": form_textfield_style, "rows": 4}),
+    )
 
     class Meta:
         model = Author
