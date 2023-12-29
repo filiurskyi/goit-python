@@ -1,16 +1,16 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
-                                  TemplateView, UpdateView, View)
+from django.views.generic import (CreateView, DeleteView, ListView,
+                                  UpdateView, View)
 from test_app.models import Author, Quote  # noqa
 
 from .forms import AddAuthorForm, AddQuoteForm, LoginForm, RegisterForm
-
-# Create your views here.
 
 
 def register(request):
@@ -50,7 +50,7 @@ class DashboardView(ListView):
     template_name = "users/dashboard.html"
     success_url = reverse_lazy("dashboard")
     context_object_name = "quotes"
-    paginate_by = 6
+    paginate_by = 2
 
     # ordering = ["date_created"]
 
@@ -60,8 +60,12 @@ class DashboardView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-        context["quote"] = Quote.objects.filter(created_by=self.request.user).order_by("-date_created")
-        context["authors"] = Author.objects.filter(created_by=self.request.user).order_by("-date_created")
+        quotes = Quote.objects.filter(created_by=self.request.user).order_by("-date_created")
+        authors = Author.objects.filter(created_by=self.request.user).order_by("-date_created")
+        paginator_quotes = Paginator(quotes, 4)
+        # paginator_authors = Paginator(authors, 4)
+        context["quotes"] = paginator_quotes
+        context["authors"] = authors
         return context
 
 
@@ -107,9 +111,52 @@ class QuoteUpdateView(UpdateView):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.created_by != self.request.user:
+            raise Http404("You are not allowed to edit this Quote.")
+        return obj
+
 
 @method_decorator(login_required, name="dispatch")
 class QuoteDeleteView(DeleteView):
     model = Quote
-    template_name = "users/delete_confirm.html"
+    template_name = "users/delete_confirm_quote.html"
     success_url = reverse_lazy("users:dashboard")
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.created_by != self.request.user:
+            raise Http404("You are not allowed to delete this Quote.")
+        return obj
+
+
+@method_decorator(login_required, name="dispatch")
+class AuthorUpdateView(UpdateView):
+    model = Author
+    form_class = AddAuthorForm
+    template_name = "users/add_author.html"
+    success_url = reverse_lazy("users:dashboard")
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.created_by != self.request.user:
+            raise Http404("You are not allowed to edit this Author.")
+        return obj
+
+
+@method_decorator(login_required, name="dispatch")
+class AuthorDeleteView(DeleteView):
+    model = Author
+    template_name = "users/delete_confirm_author.html"
+    success_url = reverse_lazy("users:dashboard")
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.created_by != self.request.user:
+            raise Http404("You are not allowed to delete this Author.")
+        return obj
