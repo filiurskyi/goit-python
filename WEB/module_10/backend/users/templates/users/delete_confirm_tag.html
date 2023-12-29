@@ -7,7 +7,7 @@
     <hr class="m-10">
 </div>
 
-<form method="post" action="{% url 'users:delete_quote' pk=object.pk %}" class="max-w-sm mx-auto">
+<form method="post" action="{% url 'users:delete_tag' pk=object.pk %}" class="max-w-sm mx-auto">
     {% csrf_token %}
     <div class="mb-5">
         <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-700">

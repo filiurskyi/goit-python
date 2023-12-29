@@ -93,3 +93,11 @@ class AddAuthorForm(forms.ModelForm):
     class Meta:
         model = Author
         fields = ["fullname", "born_date", "born_location", "description"]
+
+
+class AddTagForm(forms.ModelForm):
+    word = forms.CharField(max_length=35, required=True, widget=forms.TextInput(attrs={"class": form_style}))
+
+    class Meta:
+        model = Tag
+        fields = ["word"]

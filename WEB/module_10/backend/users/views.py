@@ -8,9 +8,9 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import (CreateView, DeleteView, ListView,
                                   UpdateView, View)
-from test_app.models import Author, Quote  # noqa
+from test_app.models import Author, Quote, Tag  # noqa
 
-from .forms import AddAuthorForm, AddQuoteForm, LoginForm, RegisterForm
+from .forms import AddAuthorForm, AddQuoteForm, LoginForm, RegisterForm, AddTagForm
 
 
 def register(request):
@@ -62,10 +62,12 @@ class DashboardView(ListView):
         context = super(DashboardView, self).get_context_data(**kwargs)
         quotes = Quote.objects.filter(created_by=self.request.user).order_by("-date_created")
         authors = Author.objects.filter(created_by=self.request.user).order_by("-date_created")
+        tags = Tag.objects.filter(created_by=self.request.user).order_by("-date_created")
         paginator_quotes = Paginator(quotes, 4)
         # paginator_authors = Paginator(authors, 4)
         context["quotes"] = paginator_quotes
         context["authors"] = authors
+        context["tags"] = tags
         return context
 
 
@@ -93,6 +95,18 @@ class AuthorCreateView(CreateView):
     model = Author
     form_class = AddAuthorForm
     template_name = "users/add_author.html"
+    success_url = reverse_lazy("users:dashboard")
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+
+@method_decorator(login_required, name="dispatch")
+class TagCreateView(CreateView):
+    model = Tag
+    form_class = AddTagForm
+    template_name = "users/add_tag.html"
     success_url = reverse_lazy("users:dashboard")
 
     def form_valid(self, form):
@@ -153,6 +167,37 @@ class AuthorUpdateView(UpdateView):
 class AuthorDeleteView(DeleteView):
     model = Author
     template_name = "users/delete_confirm_author.html"
+    success_url = reverse_lazy("users:dashboard")
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.created_by != self.request.user:
+            raise Http404("You are not allowed to delete this Author.")
+        return obj
+
+
+@method_decorator(login_required, name="dispatch")
+class TagUpdateView(UpdateView):
+    model = Tag
+    template_name = "users/add_tag.html"
+    success_url = reverse_lazy("users:dashboard")
+    form_class = AddTagForm
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.created_by != self.request.user:
+            raise Http404("You are not allowed to edit this Author.")
+        return obj
+
+
+@method_decorator(login_required, name="dispatch")
+class TagDeleteView(DeleteView):
+    model = Tag
+    template_name = "users/delete_confirm_tag.html"
     success_url = reverse_lazy("users:dashboard")
 
     def get_object(self, queryset=None):
