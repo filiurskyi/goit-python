@@ -3,7 +3,7 @@ from django.contrib.auth.forms import (AuthenticationForm, UserCreationForm,
                                        UsernameField)
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-from test_app.models import Author, Quote
+from test_app.models import Author, Quote, Tag  # noqa
 
 form_style = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 
@@ -61,10 +61,12 @@ class AddQuoteForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"class": form_textfield_style, "rows": 4})
         # Adjust cols and rows as needed "cols": 80
     )
+    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),
+                                          widget=forms.SelectMultiple(attrs={"class": form_field_style}))
 
     class Meta:
         model = Quote
-        fields = ["author", "quote"]
+        fields = ["author", "quote", "tags"]
 
 
 class AddAuthorForm(forms.ModelForm):

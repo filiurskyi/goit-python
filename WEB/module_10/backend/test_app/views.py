@@ -15,7 +15,7 @@ class QuotesListView(ListView):
     context_object_name = "quotes"
     paginate_by = 6
 
-    ordering = ["date_created"]
+    ordering = ["-date_created"]
 
 
 class AuthorsListView(ListView):
@@ -72,7 +72,7 @@ class QuotesByTagListView(ListView):
         context = super(QuotesByTagListView, self).get_context_data(
             object_list=object_list, **kwargs
         )
-        obj_list = Quote.objects.filter(tags__word=self.kwargs["tagname"]).all()
+        obj_list = Quote.objects.filter(tags__word=self.kwargs["tagname"]).order_by("-date_created").all()
         paginator = Paginator(obj_list, self.paginate_by)
         page_number = self.request.GET.get("page")
         page_obj = paginator.get_page(page_number)

@@ -58,6 +58,12 @@ class DashboardView(ListView):
         queryset = super(DashboardView, self).get_queryset()
         return queryset.filter(created_by=self.request.user).order_by("date_created")
 
+    def get_context_data(self, **kwargs):
+        context = super(DashboardView, self).get_context_data(**kwargs)
+        context["quote"] = Quote.objects.filter(created_by=self.request.user).order_by("-date_created")
+        context["authors"] = Author.objects.filter(created_by=self.request.user).order_by("-date_created")
+        return context
+
 
 @method_decorator(login_required, name="dispatch")
 class SignOutView(View):
@@ -88,3 +94,22 @@ class AuthorCreateView(CreateView):
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
+
+
+@method_decorator(login_required, name="dispatch")
+class QuoteUpdateView(UpdateView):
+    model = Quote
+    form_class = AddQuoteForm
+    template_name = "users/add_quote.html"
+    success_url = reverse_lazy("users:dashboard")
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+
+@method_decorator(login_required, name="dispatch")
+class QuoteDeleteView(DeleteView):
+    model = Quote
+    template_name = "users/delete_confirm.html"
+    success_url = reverse_lazy("users:dashboard")
