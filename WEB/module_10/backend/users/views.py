@@ -8,7 +8,7 @@ from django.views.generic import View, TemplateView, ListView, DetailView, Creat
 
 from .forms import LoginForm, AddQuoteForm, AddAuthorForm
 from .forms import RegisterForm
-from test_app.models import Quote, Author
+from test_app.models import Quote, Author # noqa
 
 # Create your views here.
 
@@ -47,17 +47,11 @@ class DashboardView(TemplateView):
     template_name = "users/dashboard.html"
     success_url = reverse_lazy("dashboard")
 
-
-
-# @login_required()
-# def dashboard(request):
-#     return render(request, "users/dashboard.html", context={"author": "nones"})
-
-
-# @login_required()
-# def sign_out(request):
-#     logout(request)
-#     return redirect(to="test_app:index")
+    def get_context_data(self, **kwargs):
+        context = super(DashboardView, self).get_context_data(**kwargs)
+        context['quotes'] = Quote.objects.filter(created_by=2).all()
+        context['authors'] = Author.objects.filter(created_by=2).all()
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -67,16 +61,16 @@ class SignOutView(View):
         return redirect("test_app:index")
 
 
-# def add_quote(request):
-#     return render(request, "users/add_quote.html", context={"author": "nones"})
-
-
 @method_decorator(login_required, name='dispatch')
 class QuoteCreateView(CreateView):
     model = Quote
     form_class = AddQuoteForm
     template_name = "users/add_quote.html"
     success_url = reverse_lazy("users:dashboard")
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -85,3 +79,9 @@ class AuthorCreateView(CreateView):
     form_class = AddAuthorForm
     template_name = "users/add_author.html"
     success_url = reverse_lazy("users:dashboard")
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+

@@ -12,7 +12,9 @@ class QuotesListView(ListView):
     template_name = "test_app/index.html"
     success_url = reverse_lazy("index")
     context_object_name = "quotes"
-    paginate_by = 4
+    paginate_by = 6
+
+    ordering = ["date_created"]
 
 
 class AuthorsListView(ListView):
@@ -38,8 +40,8 @@ class AuthorDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(AuthorDetailView, self).get_context_data(**kwargs)
-        obj_list = Quote.objects.filter(author=self.object).all()
-        paginator = Paginator(obj_list, 4)
+        obj_list = Quote.objects.filter(author=self.object).order_by("-date_created").all()
+        paginator = Paginator(obj_list, self.paginate_quotes_by)
         page_number = self.request.GET.get("page")
         page_obj = paginator.get_page(page_number)
         context["page_obj"] = page_obj
@@ -62,3 +64,12 @@ class QuotesByTagListView(ListView):
     success_url = reverse_lazy("specific_tag")
     context_object_name = "quotes"
     paginate_by = 4
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(QuotesByTagListView, self).get_context_data(object_list=object_list, **kwargs)
+        obj_list = Quote.objects.filter(tags__word=self.kwargs["tagname"]).all()
+        paginator = Paginator(obj_list, self.paginate_by)
+        page_number = self.request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context["page_obj"] = page_obj
+        return context

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -9,7 +10,7 @@ class Author(models.Model):
     description = models.TextField()
     date_modified = models.DateTimeField("date modified", auto_now_add=True)
     date_created = models.DateTimeField("date created", auto_now_add=True)
-    created_by = models.IntegerField("created by user id")
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.fullname
@@ -18,7 +19,7 @@ class Author(models.Model):
 class Tag(models.Model):
     word = models.CharField(max_length=35, unique=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    created_by = models.IntegerField("created by user id", default=2)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.word
@@ -30,7 +31,7 @@ class Quote(models.Model):
     quote = models.TextField(null=False)
     date_modified = models.DateTimeField("date modified", auto_now_add=True)
     date_created = models.DateTimeField("date created", auto_now_add=True)
-    created_by = models.IntegerField("created by user id", default=2)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.quote
