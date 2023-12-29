@@ -11,29 +11,29 @@
     {% endfor %}
 </div>
 {% endif %}
+<div class="flex">
+    <form action="{% url 'users:login' %}" method="post" class="max-w-sm mx-auto mt-10">
+        {% csrf_token %}
+        <div class="mb-5">
+            <label> Username:
+                {{ form.username }}
+            </label>
+        </div>
 
-<form action="{% url 'users:login' %}" method="post">
-    {% csrf_token %}
-    <div>
-        <label> Username:
-            {{ form.username }}
-        </label>
-    </div>
+        <div class="mb-5">
+            <label>Password:
+                {{ form.password }}
+            </label>
+        </div>
 
-    <div>
-        <label>Password:
-            {{ form.password }}
-        </label>
-    </div>
-
-    <div class="grid">
-        <button type="submit">Submit</button>
-        <button type="reset" class="secondary">Reset</button>
-    </div>
-</form>
+        <div class="grid pt-8 items-center space-4">
+            <button type="submit" class="m-1 w-15 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 text-white font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+            <button type="reset" class="m-1 w-15 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 text-gray-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-600 dark:hover:bg-gray-400 dark:focus:ring-gray-600">Reset</button>
+        </div>
+    </form>
+</div>
 
 {% include "theme/pagination.html" %}
-
 
 
 {% endblock %}
