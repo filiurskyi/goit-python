@@ -17,14 +17,14 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(to='users:dashboard')
+            return redirect(to='users:login')
         else:
             return render(request, 'users/register.html', context={"form": form})
 
     return render(request, 'users/register.html', context={"form": RegisterForm()})
 
 
-def sign_up(request):
+def sign_in(request):
     if request.user.is_authenticated:
         return redirect(to='test_app:index')
     if request.method == 'POST':
@@ -33,8 +33,7 @@ def sign_up(request):
             messages.error(request, 'Username or password didn\'t match')
             return redirect(to='users:login')
         login(request, user)
-        return redirect(to='test_app:index')
-
+        return redirect(to='users:dashboard')
     return render(request, 'users/login.html', context={"form": LoginForm()})
 
 
