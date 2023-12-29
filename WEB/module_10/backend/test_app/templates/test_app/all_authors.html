@@ -4,8 +4,11 @@
     <h1 class="text-5xl mb-5">Authors</h1>
 </div>
 <div class="grid justify-center pb-2 p-5">
-{% for author in authors %}
-    <a href="{% url 'test_app:specific_author'  fullname=author.fullname%}" class="font-normal text-gray-700 dark:text-gray-600 hover:text-blue-500">{{ author.fullname }}</a>
+    {% for author in authors %}
+    <a href="{% url 'test_app:specific_author' author.id %}"
+       class="font-normal text-gray-700 dark:text-gray-600 hover:text-blue-500">{{ author.fullname }}</a>
     {% endfor %}
 </div>
+{% include "theme/pagination.html" %}
+
 {% endblock %}

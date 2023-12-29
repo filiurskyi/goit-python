@@ -1,35 +1,64 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 # Create your views here.
 from .models import Author, Quote, Tag
 
 
-def index(request):
-    query = Quote.objects.all()
-    paginator = Paginator(query, 6)
-    page = request.GET.get(
-        "page"
-    )  # Get the current page number from the request's GET parameters
-    quotes = paginator.get_page(page)
-    return render(request, "test_app/index.html", context={"quotes": quotes})
+class QuotesListView(ListView):
+    model = Quote
+    template_name = "test_app/index.html"
+    success_url = reverse_lazy("index")
+    context_object_name = "quotes"
+    paginate_by = 4
 
 
-def all_authors(request):
-    authors = Author.objects.all().order_by("fullname")
-    return render(request, "test_app/all_authors.html", context={"authors": authors})
+class AuthorsListView(ListView):
+    model = Author
+    template_name = "test_app/all_authors.html"
+    success_url = reverse_lazy("authors/")
+    context_object_name = "authors"
+    paginate_by = 40
+
+    # ordering = ["fullname"]  -- examle of ordering
+
+    def get_queryset(self):
+        queryset = super(AuthorsListView, self).get_queryset()
+        return queryset.order_by("fullname")
 
 
-def specific_author(request, fullname):
-    author = Author.objects.filter(fullname=fullname).first()
-    return render(request, "test_app/single_author.html", context={"author": author})
+class AuthorDetailView(DetailView):
+    model = Author
+    template_name = "test_app/single_author.html"
+    success_url = reverse_lazy("specific_author")
+    context_object_name = "author"
+    paginate_quotes_by = 6
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorDetailView, self).get_context_data(**kwargs)
+        obj_list = Quote.objects.filter(author=self.object).all()
+        paginator = Paginator(obj_list, 4)
+        page_number = self.request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context["page_obj"] = page_obj
+        return context
 
 
-def all_tags(request):
-    tags = Tag.objects.all().order_by("word")
-    return render(request, "test_app/all_tags.html", context={"tags": tags})
+class TagsListView(ListView):
+    model = Tag
+    template_name = "test_app/all_tags.html"
+    success_url = reverse_lazy("all_tags")
+    context_object_name = "tags"
+    paginate_by = 40
+
+    ordering = ["word"]
 
 
-def specific_tag(request, tagname):
-    quotes = Quote.objects.filter(tags__word=tagname).all()
-    return render(request, "test_app/specific_tag.html", context={"quotes": quotes})
+class QuotesByTagListView(ListView):
+    model = Quote
+    template_name = "test_app/specific_tag.html"
+    success_url = reverse_lazy("specific_tag")
+    context_object_name = "quotes"
+    paginate_by = 4

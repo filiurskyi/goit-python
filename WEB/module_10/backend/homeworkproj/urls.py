@@ -18,8 +18,8 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
+    path("", include("test_app.urls")),
     path("admin/", admin.site.urls),
     path("user/", include("users.urls")),
-    path("", include("test_app.urls")),
     path("__reload__/", include("django_browser_reload.urls")),
 ]

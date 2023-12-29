@@ -9,7 +9,7 @@
     <div class="flex items-center mb-5 justify-center">
         <div class="block w-1/2 p-5 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-800 dark:hover:border-gray-200">
             <p class="text-right italic mb-6"><a
-                    href="{% url 'test_app:specific_author'  fullname=quote.author.fullname %}"
+                    href="{% url 'test_app:specific_author' quote.author.id %}"
                     class="mb-4 text-lg text-right  tracking-tight text-gray-900 dark:text-white">
                 {{quote.author.fullname}}</a></p>
             <div class="flex flex-nowrap px-5">
