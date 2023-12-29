@@ -61,8 +61,10 @@ class AddQuoteForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"class": form_textfield_style, "rows": 4})
         # Adjust cols and rows as needed "cols": 80
     )
-    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),
-                                          widget=forms.SelectMultiple(attrs={"class": form_field_style}))
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.SelectMultiple(attrs={"class": form_field_style}),
+    )
 
     class Meta:
         model = Quote
@@ -96,7 +98,11 @@ class AddAuthorForm(forms.ModelForm):
 
 
 class AddTagForm(forms.ModelForm):
-    word = forms.CharField(max_length=35, required=True, widget=forms.TextInput(attrs={"class": form_style}))
+    word = forms.CharField(
+        max_length=35,
+        required=True,
+        widget=forms.TextInput(attrs={"class": form_style}),
+    )
 
     class Meta:
         model = Tag

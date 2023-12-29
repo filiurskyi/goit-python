@@ -6,11 +6,12 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import (CreateView, DeleteView, ListView,
-                                  UpdateView, View)
+from django.views.generic import (CreateView, DeleteView, ListView, UpdateView,
+                                  View)
 from test_app.models import Author, Quote, Tag  # noqa
 
-from .forms import AddAuthorForm, AddQuoteForm, LoginForm, RegisterForm, AddTagForm
+from .forms import (AddAuthorForm, AddQuoteForm, AddTagForm, LoginForm,
+                    RegisterForm)
 
 
 def register(request):
@@ -60,9 +61,15 @@ class DashboardView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-        quotes = Quote.objects.filter(created_by=self.request.user).order_by("-date_created")
-        authors = Author.objects.filter(created_by=self.request.user).order_by("-date_created")
-        tags = Tag.objects.filter(created_by=self.request.user).order_by("-date_created")
+        quotes = Quote.objects.filter(created_by=self.request.user).order_by(
+            "-date_created"
+        )
+        authors = Author.objects.filter(created_by=self.request.user).order_by(
+            "-date_created"
+        )
+        tags = Tag.objects.filter(created_by=self.request.user).order_by(
+            "-date_created"
+        )
         paginator_quotes = Paginator(quotes, 4)
         # paginator_authors = Paginator(authors, 4)
         context["quotes"] = paginator_quotes
